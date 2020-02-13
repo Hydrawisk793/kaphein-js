@@ -12,7 +12,7 @@ if(!Reflect) {
             /** @type {Function} */var newTarget = arguments[2];
 
             return target.apply(
-                Object.create("undefined" === newTarget ? target.prototype : newTarget.prototype),
+                Object.create("undefined" === typeof newTarget ? target.prototype : newTarget.prototype),
                 argumentsList
             );
         },
