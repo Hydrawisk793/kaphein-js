@@ -1,4 +1,4 @@
-declare class StringSet implements Set<string>
+export declare class StringSet implements Set<string>
 {
     public constructor(
         iterable? : Iterable<string>
@@ -39,7 +39,3 @@ declare class StringSet implements Set<string>
 
     public clear() : void;
 }
-
-export {
-    StringSet,
-};

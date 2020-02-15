@@ -1,6 +1,6 @@
 import { EqualComparer } from "./equal-comparer";
 
-declare class ArraySet<T> implements Set<T>
+export declare class ArraySet<T> implements Set<T>
 {
     public constructor(
         iterable? : Iterable<T>,
@@ -93,7 +93,3 @@ declare class ArraySet<T> implements Set<T>
 
     public toArray() : T[];
 }
-
-export {
-    ArraySet,
-};

@@ -112,5 +112,5 @@ module.exports = {
     append : append,
     exclude : exclude,
     difference : difference,
-    intersection : intersection,
+    intersection : intersection
 };

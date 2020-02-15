@@ -1,8 +1,4 @@
-declare type EqualComparer<T> = (
+export declare type EqualComparer<T> = (
     lhs : T,
     rhs : T
 ) => boolean;
-
-export {
-    EqualComparer,
-};

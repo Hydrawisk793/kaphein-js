@@ -18,7 +18,7 @@ var ArrayQueue = (function ()
     ArrayQueue.prototype = {
         constructor : ArrayQueue,
 
-        entries()
+        entries : function entries()
         {
             return new PairIterator(this._elements);
         },
@@ -26,13 +26,13 @@ var ArrayQueue = (function ()
         /**
          *  @param {T} v
          */
-        enqueue(v)
+        enqueue : function enqueue(v)
         {
             this._elements.splice(this._elements.length, 0, v);
             ++this.size;
         },
 
-        dequeue()
+        dequeue : function dequeue()
         {
             var elem;
 
@@ -46,11 +46,11 @@ var ArrayQueue = (function ()
             return elem[0];
         },
 
-        clear()
+        clear : function clear()
         {
             this._elements = [];
             this.size = 0;
-        },
+        }
     };
 
     if(isSymbolSupported()) {
@@ -76,11 +76,11 @@ var ArrayQueue = (function ()
     PairIterator.prototype = {
         constructor : PairIterator,
 
-        next()
+        next : function next()
         {
             var result = {
                 /**  @type {[number, T]} */value : void 0,
-                done : this._index >= this._elements.length,
+                done : this._index >= this._elements.length
             };
 
             if(!result.done) {
@@ -89,7 +89,7 @@ var ArrayQueue = (function ()
             }
 
             return result;
-        },
+        }
     };
 
     if(isSymbolSupported()) {
@@ -103,5 +103,5 @@ var ArrayQueue = (function ()
 })();
 
 module.exports = {
-    ArrayQueue : ArrayQueue,
+    ArrayQueue : ArrayQueue
 };

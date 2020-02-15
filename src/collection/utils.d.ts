@@ -1,4 +1,4 @@
-export function forOf<T>(
+export declare function forOf<T>(
     iterable : Iterable<T>,
     callback : (
         value : T,

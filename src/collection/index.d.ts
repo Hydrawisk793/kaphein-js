@@ -1,17 +1,14 @@
-import * as SetExtensions from "./set-extensions";
+export * from "./comparer";
+export * from "./equal-comparer";
 
-export { Comparer } from "./comparer";
-export { EqualComparer } from "./equal-comparer";
-
-export { StringKeyMap } from "./string-key-map";
-export { NumberKeyMap } from "./number-key-map";
-export { ArraySet } from "./array-set";
-export { ArrayMap } from "./array-map";
-export { StringSet } from "./string-set";
-export { NumberSet } from "./number-set";
-export { RbTreeSet } from "./rb-tree-set";
-export { ArrayQueue } from "./array-queue";
-export { PriorityQueue} from "./priority-queue";
-
-export { forOf } from "./utils";
-export { SetExtensions };
+export * from "./utils";
+export * from "./set-extensions";
+export * from "./string-key-map";
+export * from "./number-key-map";
+export * from "./array-set";
+export * from "./array-map";
+export * from "./string-set";
+export * from "./number-set";
+export * from "./rb-tree-set";
+// export * from "./array-queue";
+export * from "./priority-queue";

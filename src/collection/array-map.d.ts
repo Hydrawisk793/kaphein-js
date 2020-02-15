@@ -1,6 +1,6 @@
 import { EqualComparer } from "./equal-comparer";
 
-declare class ArrayMap<K, V> implements Map<K, V>
+export declare class ArrayMap<K, V> implements Map<K, V>
 {
     public constructor(
         iterable? : Iterable<[K, V]>,
@@ -72,7 +72,3 @@ declare class ArrayMap<K, V> implements Map<K, V>
 
     public toArray() : [K, V][];
 }
-
-export {
-    ArrayMap,
-};

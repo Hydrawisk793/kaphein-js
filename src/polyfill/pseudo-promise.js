@@ -13,27 +13,27 @@ function PseudoPromise(executor)
     setTimeout(this._onExecuting, 0);
 }
 
-PseudoPromise.resolve = function (/*value*/)
+PseudoPromise.resolve = function resolve(/*value*/)
 {
 
 };
 
-PseudoPromise.reject = function (/*reason*/)
+PseudoPromise.reject = function reject(/*reason*/)
 {
 
 };
 
-PseudoPromise.all = function (/*iterable*/)
+PseudoPromise.all = function all(/*iterable*/)
 {
 
 };
 
-PseudoPromise.race = function (/*iterable*/)
+PseudoPromise.race = function race(/*iterable*/)
 {
 
 };
 
-PseudoPromise.prototype.then = function ()
+PseudoPromise.prototype.then = function then()
 {
 
 };
@@ -83,5 +83,5 @@ PseudoPromise.prototype._reject = function (/*reason*/)
 };
 
 module.exports = {
-    PseudoPromise : PseudoPromise,
+    PseudoPromise : PseudoPromise
 };

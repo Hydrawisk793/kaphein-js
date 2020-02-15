@@ -1,7 +1,7 @@
 /* eslint-disable no-extend-native */
 
 if(!String.prototype.repeat) {
-    String.prototype.repeat = function (count)
+    String.prototype.repeat = function repeat(count)
     {
         var str;
         var i;
@@ -23,21 +23,21 @@ if(!String.prototype.trim) {
     /**
      *  @see https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/String/trim
      */
-    String.prototype.trim = function ()
+    String.prototype.trim = function trim()
     {
         return this.replace(/^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g, "");
     };
 }
 
 if(!String.prototype.includes) {
-    String.prototype.includes = function (elem)
+    String.prototype.includes = function includes(elem)
     {
         return this.indexOf(elem, arguments[1]) >= 0;
     };
 }
 
 if(!String.prototype.startsWith) {
-    String.prototype.startsWith = function (other)
+    String.prototype.startsWith = function startsWith(other)
     {
         if(other instanceof RegExp) {
             throw new TypeError("The parameter must not be a RegExp object.");
@@ -51,7 +51,7 @@ if(!String.prototype.startsWith) {
 }
 
 if(!String.prototype.endsWith) {
-    String.prototype.endsWith = function (other)
+    String.prototype.endsWith = function endsWith(other)
     {
         if(other instanceof RegExp) {
             throw new TypeError("The parameter must not be a RegExp object.");

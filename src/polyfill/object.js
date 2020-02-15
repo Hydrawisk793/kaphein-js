@@ -1,4 +1,4 @@
-var typeTrait = require("../utils/type-trait");
+var typeTrait = require("../type-trait");
 var isUndefined = typeTrait.isUndefined;
 var isUndefinedOrNull = typeTrait.isUndefinedOrNull;
 
@@ -108,14 +108,14 @@ Object.keys = (function ()
             return _originalKeys;
         }
         else {
-            return function (o)
+            return function keys(o)
             {
                 return _pseudoKeys(o, _originalKeys);
             };
         }
     }
     else {
-        return function (o)
+        return function keys(o)
         {
             return _pseudoKeys(o, _getKeysFromObject);
         };
@@ -123,7 +123,7 @@ Object.keys = (function ()
 }());
 
 if(!Object.create) {
-    Object.create = function (proto)
+    Object.create = function create(proto)
     {
         if(null === proto) {
             throw new Error("This environment doesn't support null argument for 'proto' parameter.");
@@ -147,7 +147,7 @@ if(!Object.create) {
 }
 
 if(!Object.getPrototypeOf) {
-    Object.getPrototypeOf = function (o)
+    Object.getPrototypeOf = function getPrototypeOf(o)
     {
         if(isUndefinedOrNull(o)) {
             throw new TypeError("The parameter cannot be undefined or null.");
@@ -166,7 +166,7 @@ if(!Object.assign) {
     {
         var _hasOwnProperty = Object.prototype.hasOwnProperty;
 
-        return function (target, src)
+        return function assign(target, src)
         {
             var srcKey, i;
             var argCount = arguments.length;

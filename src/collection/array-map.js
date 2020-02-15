@@ -1,6 +1,6 @@
-var isUndefined = require("../utils/type-trait").isUndefined;
-var isIterable = require("../utils/type-trait").isIterable;
-var isCallable = require("../utils/type-trait").isCallable;
+var isUndefined = require("../type-trait").isUndefined;
+var isIterable = require("../type-trait").isIterable;
+var isCallable = require("../type-trait").isCallable;
 var isSymbolSupported = require("./is-symbol-supported").isSymbolSupported;
 var defaultEqualComparer = require("./detail").defaultEqualComparer;
 
@@ -65,7 +65,7 @@ var ArrayMap = (function ()
         /**
          *  @returns {number}
          */
-        getElementCount()
+        getElementCount : function getElementCount()
         {
             return this._pairs.length;
         },
@@ -73,7 +73,8 @@ var ArrayMap = (function ()
         /**
          *  @param {Function} callback
          */
-        forEach(callback) {
+        forEach : function forEach(callback)
+        {
             var thisArg = arguments[1];
 
             for(var count = this._pairs.length, i = 0; i < count; ++i) {
@@ -85,7 +86,7 @@ var ArrayMap = (function ()
         /**
          *  @returns {PairIterator<K, V>}
          */
-        entries()
+        entries : function entries()
         {
             return new PairIterator(this);
         },
@@ -93,7 +94,7 @@ var ArrayMap = (function ()
         /**
          *  @returns {KeyIterator<K>}
          */
-        keys()
+        keys : function keys()
         {
             return new KeyIterator(this);
         },
@@ -101,7 +102,7 @@ var ArrayMap = (function ()
         /**
          *  @returns {ValueIterator<V>}
          */
-        values()
+        values : function values()
         {
             return new ValueIterator(this);
         },
@@ -110,7 +111,7 @@ var ArrayMap = (function ()
          *  @param {K} key
          *  @returns {boolean}
          */
-        has(key)
+        has : function has(key)
         {
             return this.indexOf(key) >= 0;
         },
@@ -119,7 +120,7 @@ var ArrayMap = (function ()
          *  @param {Function} callback
          *  @param {*} [thisArg]
          */
-        findIndex(callback)
+        findIndex : function findIndex(callback)
         {
             return this._pairs.findIndex(callback, arguments[1]);
         },
@@ -127,7 +128,8 @@ var ArrayMap = (function ()
         /**
          *  @param {K} key
          */
-        indexOf(key) {
+        indexOf : function indexOf(key)
+        {
             for(var count = this._pairs.length, index = -1, i = 0; index < 0 && i < count; ++i) {
                 if(this._keyEqualComparer(this._pairs[i][0], key)) {
                     index = i;
@@ -142,7 +144,7 @@ var ArrayMap = (function ()
          *  @param {V} [defaultValue]
          *  @returns {V}
          */
-        get(key)
+        get : function get(key)
         {
             var index = this.indexOf(key);
 
@@ -157,7 +159,7 @@ var ArrayMap = (function ()
          *  @param {number} index
          *  @returns {[K, V]}
          */
-        getAt(index)
+        getAt : function getAt(index)
         {
             if(!Number.isSafeInteger(index) || index < 0) {
                 throw new TypeError("'index' must be a non-negative safe integer.");
@@ -173,7 +175,7 @@ var ArrayMap = (function ()
          *  @param {K} key
          *  @param {V} value
          */
-        set(key, value)
+        set : function set(key, value)
         {
             var index = this.indexOf(key);
 
@@ -193,7 +195,7 @@ var ArrayMap = (function ()
          *  @param {K} key
          *  @returns {boolean}
          */
-        "delete"(key)
+        "delete" : function (key)
         {
             var index = this.indexOf(key);
             var result = index >= 0;
@@ -206,16 +208,16 @@ var ArrayMap = (function ()
             return result;
         },
 
-        clear()
+        clear : function clear()
         {
             this._pairs = [];
             this.size = 0;
         },
 
-        toArray()
+        toArray : function toArray()
         {
             return this._pairs.slice();
-        },
+        }
     };
 
     if(_isSymbolSupported) {
@@ -245,7 +247,7 @@ var ArrayMap = (function ()
     {
         var result = {
             done : this._index >= this._arrayMap._pairs.length,
-            value : void 0,
+            value : void 0
         };
 
         if(!result.done) {
@@ -282,7 +284,7 @@ var ArrayMap = (function ()
     {
         var result = {
             done : this._index >= this._arrayMap._pairs.length,
-            value : void 0,
+            value : void 0
         };
 
         if(!result.done) {
@@ -319,7 +321,7 @@ var ArrayMap = (function ()
     {
         var out = {
             done : this._index >= this._arrayMap._pairs.length,
-            value : void 0,
+            value : void 0
         };
 
         if(!out.done) {
@@ -342,5 +344,5 @@ var ArrayMap = (function ()
 })();
 
 module.exports = {
-    ArrayMap : ArrayMap,
+    ArrayMap : ArrayMap
 };

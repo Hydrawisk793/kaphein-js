@@ -2,29 +2,19 @@
  * A ECMAScript 6 map implementaion using plain ECMAScript object.
  * The type of key is limited to strings.
  */
-declare class StringKeyMap<V> implements Map<string, V>
+export declare class StringKeyMap<V> implements Map<string, V>
 {
     public static wrap<T>(
         src : Record<string, T>
     ) : StringKeyMap<T>;
 
-    public constructor();
-
-    public constructor(
-        src : StringKeyMap<V>
-    );
-
     /**
      * Creates a new map and inserts key-value pairs from the specified array.
-     *  @param pairs An array of key-value pairs.
+     *  @param iterable An array of key-value pairs.
      * Each pair is an array whose the first element is key and the second element is value.
      */
     public constructor(
-        pairs : [string, V][]
-    );
-
-    public constructor(
-        src : { [key : string] : V }
+        iterable? : Iterable<[string, V]>
     );
 
     public attach(
@@ -96,7 +86,3 @@ declare class StringKeyMap<V> implements Map<string, V>
 
     public toPlainObject() : { [key : string] : V };
 }
-
-export {
-    StringKeyMap,
-};

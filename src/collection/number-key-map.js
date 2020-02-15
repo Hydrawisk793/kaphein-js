@@ -1,6 +1,6 @@
-var isUndefinedOrNull = require("../utils/type-trait").isUndefinedOrNull;
-var isIterable = require("../utils/type-trait").isIterable;
-var isNumber = require("../utils/type-trait").isNumber;
+var isUndefinedOrNull = require("../type-trait").isUndefinedOrNull;
+var isIterable = require("../type-trait").isIterable;
+var isNumber = require("../type-trait").isNumber;
 var isSymbolSupported = require("./is-symbol-supported").isSymbolSupported;
 
 var _hasOwnProperty = Object.prototype.hasOwnProperty;
@@ -28,7 +28,7 @@ PairIterator.prototype.next = function ()
     var key;
     var result = {
         value : void 0,
-        done : this._keyIndex >= this._keys.length,
+        done : this._keyIndex >= this._keys.length
     };
 
     if(!result.done) {
@@ -52,7 +52,7 @@ KeyIterator.prototype.next = function ()
 {
     var result = {
         value : void 0,
-        done : this._keyIndex >= this._keys.length,
+        done : this._keyIndex >= this._keys.length
     };
 
     if(!result.done) {
@@ -77,7 +77,7 @@ ValueIterator.prototype.next = function ()
     var key;
     var result = {
         value : void 0,
-        done : this._keyIndex >= this._keys.length,
+        done : this._keyIndex >= this._keys.length
     };
 
     if(!result.done) {
@@ -321,5 +321,5 @@ if(isSymbolSupported()) {
 }
 
 module.exports = {
-    NumberKeyMap : NumberKeyMap,
+    NumberKeyMap : NumberKeyMap
 };

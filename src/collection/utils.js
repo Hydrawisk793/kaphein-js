@@ -31,6 +31,6 @@ module.exports = (function ()
     }
 
     return {
-        forOf : forOf,
+        forOf : forOf
     };
 })();

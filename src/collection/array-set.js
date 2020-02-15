@@ -1,6 +1,6 @@
-var isUndefined = require("../utils/type-trait").isUndefined;
-var isIterable = require("../utils/type-trait").isIterable;
-var isCallable = require("../utils/type-trait").isCallable;
+var isUndefined = require("../type-trait").isUndefined;
+var isIterable = require("../type-trait").isIterable;
+var isCallable = require("../type-trait").isCallable;
 var isSymbolSupported = require("./is-symbol-supported").isSymbolSupported;
 var setAppend = require("./set-extensions").append;
 var defaultEqualComparer = require("./detail").defaultEqualComparer;
@@ -43,7 +43,7 @@ var ArraySet = (function ()
         /**
          *  @param {T[]} arr
          */
-        attach(arr)
+        attach : function attach(arr)
         {
             if(!Array.isArray(arr)) {
                 throw new TypeError("'arr' must be an array.");
@@ -53,7 +53,7 @@ var ArraySet = (function ()
             this.size = arr.length;
         },
 
-        detach()
+        detach : function detach()
         {
             var arr = this._elements;
 
@@ -65,7 +65,7 @@ var ArraySet = (function ()
         /**
          *  @returns {number}
          */
-        getElementCount()
+        getElementCount : function getElementCount()
         {
             return this._elements.length;
         },
@@ -73,7 +73,7 @@ var ArraySet = (function ()
         /**
          *  @param {number} index
          */
-        getAt(index)
+        getAt : function getAt(index)
         {
             return this._elements[index];
         },
@@ -82,7 +82,7 @@ var ArraySet = (function ()
          *  @param {number} index
          *  @param {T} element
          */
-        setAt(index, element)
+        setAt : function setAt(index, element)
         {
             this._elements[index] = element;
         },
@@ -90,7 +90,7 @@ var ArraySet = (function ()
         /**
          *  @param {Function} callback
          */
-        forEach(callback)
+        forEach : function forEach(callback)
         {
             var thisArg = arguments[1];
 
@@ -102,7 +102,7 @@ var ArraySet = (function ()
         /**
          *  @returns {PairIterator<T>}
          */
-        entries()
+        entries : function entries()
         {
             return new PairIterator(this);
         },
@@ -110,7 +110,7 @@ var ArraySet = (function ()
         /**
          *  @returns {ValueIterator<T>}
          */
-        keys()
+        keys : function keys()
         {
             return new ValueIterator(this);
         },
@@ -118,7 +118,7 @@ var ArraySet = (function ()
         /**
          *  @returns {ValueIterator<T>}
          */
-        values()
+        values : function values()
         {
             return new ValueIterator(this);
         },
@@ -127,7 +127,7 @@ var ArraySet = (function ()
          *  @param {T} element
          *  @returns {boolean}
          */
-        has(element)
+        has : function has(element)
         {
             return this.indexOf(element) >= 0;
         },
@@ -135,7 +135,7 @@ var ArraySet = (function ()
         /**
          *  @param {Function} callback
          */
-        findIndex(callback)
+        findIndex : function findIndex(callback)
         {
             return this._elements.findIndex(callback, arguments[1]);
         },
@@ -143,7 +143,7 @@ var ArraySet = (function ()
         /**
          *  @param {T} element
          */
-        indexOf(element)
+        indexOf : function indexOf(element)
         {
             /** @type {EqualComparer<typeof element>} */var comparer = isCallable(arguments[1]) ? arguments[1] : this._comparer;
 
@@ -159,7 +159,7 @@ var ArraySet = (function ()
         /**
          *  @param {T} element
          */
-        add(element)
+        add : function add(element)
         {
             this._tryAdd(element);
 
@@ -169,7 +169,7 @@ var ArraySet = (function ()
         /**
          *  @param {T} element
          */
-        addOrReplace(element)
+        addOrReplace : function addOrReplace(element)
         {
             var index = this._tryAdd(element);
             if(index >= 0) {
@@ -183,7 +183,7 @@ var ArraySet = (function ()
          *  @param {T} element
          *  @returns {boolean}
          */
-        tryAdd(element)
+        tryAdd : function tryAdd(element)
         {
             return this._tryAdd(element) < 0;
         },
@@ -192,7 +192,7 @@ var ArraySet = (function ()
          *  @param {number} index
          *  @param {T} element
          */
-        insertOrReplace(index, element)
+        insertOrReplace : function insertOrReplace(index, element)
         {
             var existingElementIndex = this.indexOf(element);
 
@@ -211,7 +211,7 @@ var ArraySet = (function ()
         /**
          *  @param {number} index
          */
-        removeAt(index)
+        removeAt : function removeAt(index)
         {
             var result = (index < this._elements.length && index >= 0);
 
@@ -228,23 +228,23 @@ var ArraySet = (function ()
          *  @param {T} element
          *  @returns {boolean}
          */
-        "delete"(element)
+        "delete" : function (element)
         {
             return this.removeAt(this.indexOf(element));
         },
 
-        clear()
+        clear : function clear()
         {
             /** @type {T[]} */this._elements = [];
             this.size = 0;
         },
 
-        toString()
+        toString : function toString()
         {
             return "ArraySet(" + this._elements.length + ") {" + this._elements.join(", ") + "}";
         },
 
-        toArray()
+        toArray : function toArray()
         {
             return this._elements.slice();
         },
@@ -253,7 +253,7 @@ var ArraySet = (function ()
          *  @private
          *  @param {T} element
          */
-        _tryAdd(element)
+        _tryAdd : function _tryAdd(element)
         {
             var index = this.indexOf(element);
 
@@ -264,7 +264,7 @@ var ArraySet = (function ()
             }
 
             return index;
-        },
+        }
     };
 
     if(_isSymbolSupported) {
@@ -291,7 +291,7 @@ var ArraySet = (function ()
     PairIterator.prototype.next = function ()
     {
         var out = {
-            done : this._index >= this._arraySet.getElementCount(),
+            done : this._index >= this._arraySet.getElementCount()
         };
 
         if(!out.done) {
@@ -329,7 +329,7 @@ var ArraySet = (function ()
     ValueIterator.prototype.next = function ()
     {
         var out = {
-            done : this._index >= this._arraySet.getElementCount(),
+            done : this._index >= this._arraySet.getElementCount()
         };
 
         if(!out.done) {
@@ -352,5 +352,5 @@ var ArraySet = (function ()
 })();
 
 module.exports = {
-    ArraySet : ArraySet,
+    ArraySet : ArraySet
 };

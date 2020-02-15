@@ -34,7 +34,7 @@ if(!Number.MAX_SAFE_INTEGER) {
 if(!Number.isNaN) {
     Number.isNaN = isNaN
         || (
-            function (/*v*/)
+            function isNaN(/*v*/)
             {
                 throw new Error("Not polyfilled yet...");
             }
@@ -45,7 +45,7 @@ if(!Number.isNaN) {
 if(!Number.isFinite) {
     Number.isFinite = isFinite
         || (
-            function (/*v*/)
+            function isFinite(/*v*/)
             {
                 throw new Error("Not polyfilled yet...");
             }
@@ -54,7 +54,7 @@ if(!Number.isFinite) {
 }
 
 if(!Number.isInteger) {
-    Number.isInteger = function (n)
+    Number.isInteger = function isInteger(n)
     {
         return Number.isFinite(n)
             && n === _toInteger(n)
@@ -63,7 +63,7 @@ if(!Number.isInteger) {
 }
 
 if(!Number.isSafeInteger) {
-    Number.isSafeInteger = function (n)
+    Number.isSafeInteger = function isSafeInteger(n)
     {
         return Number.isInteger(n)
             && Math.abs(n) <= Number.MAX_SAFE_INTEGER
@@ -74,7 +74,7 @@ if(!Number.isSafeInteger) {
 if(!Number.parseInt) {
     Number.parseInt = parseInt
         || (
-            function ()
+            function parseInt()
             {
                 throw new Error("Not polyfilled yet...");
             }
@@ -85,7 +85,7 @@ if(!Number.parseInt) {
 if(!Number.parseFloat) {
     Number.parseFloat = parseFloat
         || (
-            function ()
+            function parseFloat()
             {
                 throw new Error("Not polyfilled yet...");
             }

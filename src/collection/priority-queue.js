@@ -23,22 +23,22 @@ var PriorityQueue = (function ()
     }
 
     PriorityQueue.prototype = {
-        getElementCount()
+        getElementCount : function getElementCount()
         {
             return this._elementCount;
         },
 
-        isEmpty()
+        isEmpty : function isEmpty()
         {
             return this._elementCount < 1;
         },
 
-        isFull()
+        isFull : function isFull()
         {
             return this._elementCount >= Number.MAX_SAFE_INTEGER;
         },
 
-        peek()
+        peek : function peek()
         {
             if(this.isEmpty()) {
                 throw new Error("The queue has no element.");
@@ -50,7 +50,7 @@ var PriorityQueue = (function ()
         /**
          *  @param {T} e
          */
-        enqueue(e)
+        enqueue : function enqueue(e)
         {
             if(this.isFull()) {
                 throw new Error("The queue is full.");
@@ -79,7 +79,7 @@ var PriorityQueue = (function ()
             return this;
         },
 
-        dequeue()
+        dequeue : function dequeue()
         {
             if(this.isEmpty()) {
                 throw new Error("The queue has no element.");
@@ -97,11 +97,11 @@ var PriorityQueue = (function ()
             return elem;
         },
 
-        clear()
+        clear : function clear()
         {
             this._nodes = [nilNode];
             this._elementCount = 0;
-        },
+        }
 
         // toString()
         // {
@@ -193,5 +193,5 @@ var PriorityQueue = (function ()
 })();
 
 module.exports = {
-    PriorityQueue : PriorityQueue,
+    PriorityQueue : PriorityQueue
 };

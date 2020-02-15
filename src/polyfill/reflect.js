@@ -7,7 +7,7 @@ if(!Reflect) {
          *  @param {ArrayLike<any>} argumentsList
          *  @param {Function} [newTarget]
          */
-        construct(target, argumentsList)
+        construct : function construct(target, argumentsList)
         {
             /** @type {Function} */var newTarget = arguments[2];
 
@@ -17,19 +17,19 @@ if(!Reflect) {
             );
         },
 
-        apply(target, thisArg, argList)
+        apply : function apply(target, thisArg, argList)
         {
             return target.apply(thisArg, argList);
         },
 
-        has(target, propertyKey)
+        has : function has(target, propertyKey)
         {
             return propertyKey in target;
         },
 
-        deleteProperty(target, propertyKey)
+        deleteProperty : function deleteProperty(target, propertyKey)
         {
             delete target[propertyKey];
-        },
+        }
     };
 }

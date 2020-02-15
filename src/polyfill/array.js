@@ -1,8 +1,7 @@
-var typeTrait = require("../utils/type-trait");
-var isUndefined = typeTrait.isUndefined;
-var isString = typeTrait.isString;
-var isCallable = typeTrait.isCallable;
-var isNonNullObject = typeTrait.isNonNullObject;
+var isUndefined = require("../type-trait").isUndefined;
+var isString = require("../type-trait").isString;
+var isCallable = require("../type-trait").isCallable;
+var isNonNullObject = require("../type-trait").isNonNullObject;
 var ArrayKeyIterator = require("./array-key-iterator").ArrayKeyIterator;
 var ArrayValueIterator = require("./array-value-iterator").ArrayValueIterator;
 var ArrayEntryIterator = require("./array-entry-iterator").ArrayEntryIterator;
@@ -127,7 +126,7 @@ if(!Array.from) {
             return arr;
         }
 
-        return function (arg)
+        return function from(arg)
         {
             return _arrayFromFunctionBody(
                 [], null,
@@ -139,7 +138,7 @@ if(!Array.from) {
 }
 
 if(!Array.of) {
-    Array.of = function createArrayOf()
+    Array.of = function ()
    {
        return Array.prototype.slice.call(arguments);
    };
@@ -154,7 +153,7 @@ if(!Array.isArray) {
          *  @returns {v is Array}
          *  @see https://stackoverflow.com/questions/4775722/how-to-check-if-an-object-is-an-array
          */
-        return function (v)
+        return function isArray(v)
         {
             return "[object Array]" === toString.call(v);
         };
@@ -162,7 +161,7 @@ if(!Array.isArray) {
 }
 
 if(!Array.prototype.push) {
-    Array.prototype.push = function ()
+    Array.prototype.push = function push()
     {
         var i;
         var elem;
@@ -199,7 +198,7 @@ Array.prototype.sort = (function ()
         }());
 
         if(_allowsNonFunctionArg) {
-            return function (comparator)
+            return function sort(comparator)
             {
                 var result;
 
@@ -222,7 +221,7 @@ Array.prototype.sort = (function ()
         }
     }
     else {
-        return function (/*comparator*/)
+        return function sort(/*comparator*/)
         {
             throw new Error("Not polyfilled yet...");
         };

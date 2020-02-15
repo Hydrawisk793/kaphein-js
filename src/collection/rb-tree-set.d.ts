@@ -1,8 +1,8 @@
 import { Comparer } from "./comparer";
 
-declare namespace RbTreeSet
+export declare namespace RbTreeSet
 {
-    const enum SearchTarget
+    export const enum SearchTarget
     {
         less = 0,
         lessOrEqual = 1,
@@ -11,7 +11,7 @@ declare namespace RbTreeSet
         equal = 4,
     }
 
-    class CppValueIterator<T>
+    export class CppValueIterator<T>
     {
         public equals(
             other : any
@@ -27,7 +27,7 @@ declare namespace RbTreeSet
     }
 }
 
-declare class RbTreeSet<T> implements Set<T>
+export declare class RbTreeSet<T> implements Set<T>
 {
     public constructor(
         iterable? : Iterable<T>,
@@ -84,7 +84,3 @@ declare class RbTreeSet<T> implements Set<T>
 
     public toString() : string;
 }
-
-export {
-    RbTreeSet,
-};

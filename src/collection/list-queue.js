@@ -1,6 +1,6 @@
-var isUndefined = require("../utils/type-trait").isUndefined;
-var isFunction = require("../utils/type-trait").isFunction;
-var isIterable = require("../utils/type-trait").isIterable;
+var isUndefined = require("../type-trait").isUndefined;
+var isFunction = require("../type-trait").isFunction;
+var isIterable = require("../type-trait").isIterable;
 var isSymbolSupported = require("./is-symbol-supported").isSymbolSupported;
 
 var ListQueue = (function ()
@@ -75,17 +75,17 @@ var ListQueue = (function ()
     ListQueue.prototype = {
         constructor : ListQueue,
 
-        getElementCount()
+        getElementCount : function getElementCount()
         {
             return this._elemCount;
         },
 
-        isEmpty()
+        isEmpty : function isEmpty()
         {
             return null === this._head;
         },
 
-        isFull()
+        isFull : function isFull()
         {
             return this._elemCount >= Number.MAX_SAFE_INTEGER;
         },
@@ -93,13 +93,13 @@ var ListQueue = (function ()
         /**
          *  @returns {Iterator<T>}
          */
-        values()
+        values : function values()
         {
             return ({
-                next()
+                next : function next()
                 {
                     var out = {
-                        done : null === this._current,
+                        done : null === this._current
                     };
 
                     if(!out.done) {
@@ -114,7 +114,7 @@ var ListQueue = (function ()
             });
         },
 
-        peek()
+        peek : function peek()
         {
             if(this.isEmpty()) {
                 throw new Error("The queue has no element.");
@@ -126,7 +126,7 @@ var ListQueue = (function ()
         /**
          *  @param {T} e
          */
-        enqueue(e)
+        enqueue : function enqueue(e)
         {
             var newNode;
 
@@ -149,7 +149,7 @@ var ListQueue = (function ()
             return this;
         },
 
-        dequeue()
+        dequeue : function dequeue()
         {
             if(this.isEmpty()) {
                 throw new Error("The queue has no element.");
@@ -173,14 +173,14 @@ var ListQueue = (function ()
             return element;
         },
 
-        clear()
+        clear : function clear()
         {
             this._head = null;
             this._tail = null;
             this._elemCount = 0;
         },
 
-        toString()
+        toString : function toString()
         {
             var str = '[';
 
@@ -198,17 +198,17 @@ var ListQueue = (function ()
             str += ']';
 
             return str;
-        },
+        }
     };
 
     if(isSymbolSupported()) {
         ListQueue.prototype[Symbol.iterator] = function ()
         {
             return ({
-                next()
+                next : function next()
                 {
                     var out = {
-                        done : null === this._current,
+                        done : null === this._current
                     };
 
                     if(!out.done) {
@@ -219,7 +219,7 @@ var ListQueue = (function ()
                     return out;
                 },
 
-                _current : this._head,
+                _current : this._head
             });
         };
     }
@@ -229,5 +229,5 @@ var ListQueue = (function ()
 
 
 module.exports = {
-    ListQueue : ListQueue,
+    ListQueue : ListQueue
 };

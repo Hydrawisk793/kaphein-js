@@ -2,29 +2,19 @@
  * A ECMAScript 6 map implementaion using plain ECMAScript object.
  * The type of key is limited to numbers.
  */
-declare class NumberKeyMap<V> implements Map<number, V>
+export declare class NumberKeyMap<V> implements Map<number, V>
 {
     public static wrap<T>(
         src : Record<number, T>
     ) : NumberKeyMap<T>;
 
-    public constructor();
-
-    public constructor(
-        src : NumberKeyMap<V>
-    );
-
     /**
      * Creates a new map and inserts key-value pairs from the specified array.
-     *  @param pairs An array of key-value pairs.
+     *  @param iterable An array of key-value pairs.
      * Each pair is an array whose the first element is key and the second element is value.
      */
     public constructor(
-        pairs : [number, V][]
-    );
-
-    public constructor(
-        src : { [key : number] : V }
+        iterable? : Iterable<[number, V]>
     );
 
     public attach(
@@ -96,7 +86,3 @@ declare class NumberKeyMap<V> implements Map<number, V>
 
     public toPlainObject() : { [key : number] : V };
 }
-
-export {
-    NumberKeyMap,
-};

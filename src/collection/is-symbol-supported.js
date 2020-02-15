@@ -3,6 +3,6 @@ function isSymbolSupported()
     return Symbol && "function" === typeof Symbol;
 }
 
-export {
-    isSymbolSupported,
+module.exports = {
+    isSymbolSupported : isSymbolSupported
 };

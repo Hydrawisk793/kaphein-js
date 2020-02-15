@@ -9,5 +9,5 @@ function defaultEqualComparer(lhs, rhs)
 }
 
 module.exports = {
-    defaultEqualComparer : defaultEqualComparer,
+    defaultEqualComparer : defaultEqualComparer
 };

@@ -17,7 +17,7 @@ StringValueIterator.prototype.next = function ()
     var done = this._i >= this._str.length;
     var result = {
         value : (done ? void 0 : this._str.charAt(this._i)),
-        done : done,
+        done : done
     };
 
     if(!done) {
@@ -28,5 +28,5 @@ StringValueIterator.prototype.next = function ()
 };
 
 module.exports = {
-    StringValueIterator : StringValueIterator,
+    StringValueIterator : StringValueIterator
 };

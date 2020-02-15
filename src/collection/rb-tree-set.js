@@ -1,6 +1,6 @@
-var isUndefined = require("../utils/type-trait").isUndefined;
-var isIterable = require("../utils/type-trait").isIterable;
-var isFunction = require("../utils/type-trait").isFunction;
+var isUndefined = require("../type-trait").isUndefined;
+var isIterable = require("../type-trait").isIterable;
+var isFunction = require("../type-trait").isFunction;
 var isSymbolSupported = require("./is-symbol-supported").isSymbolSupported;
 
 var RbTreeSet = (function ()
@@ -33,7 +33,7 @@ var RbTreeSet = (function ()
     RbTreeNode.prototype = {
         constructor : RbTreeNode,
 
-        leftChild()
+        leftChild : function leftChild()
         {
             if(arguments.length < 1) {
                 return this._leftChild;
@@ -43,7 +43,7 @@ var RbTreeSet = (function ()
             }
         },
 
-        rightChild()
+        rightChild : function rightChild()
         {
             if(arguments.length < 1) {
                 return this._rightChild;
@@ -53,7 +53,7 @@ var RbTreeSet = (function ()
             }
         },
 
-        getRoot()
+        getRoot : function getRoot()
         {
             var pRoot = this;
             for(
@@ -65,12 +65,12 @@ var RbTreeSet = (function ()
             return pRoot;
         },
 
-        getGrandParent()
+        getGrandParent : function getGrandParent()
         {
             return (this._parent !== null ? this._parent._parent : null);
         },
 
-        getUncle()
+        getUncle : function getUncle()
         {
             var pUncle = null;
 
@@ -88,7 +88,7 @@ var RbTreeSet = (function ()
         /**
          *  @param {*} parent
          */
-        getSibling(parent)
+        getSibling : function getSibling(parent)
         {
             if(typeof(parent) === "undefined") {
                 return (
@@ -114,12 +114,12 @@ var RbTreeSet = (function ()
             }
         },
 
-        isNil()
+        isNil : function isNil()
         {
             return this._element === null;
         },
 
-        isNonNilRoot()
+        isNonNilRoot : function isNonNilRoot()
         {
             return this._parent === null && !this.isNil();
         },
@@ -127,7 +127,7 @@ var RbTreeSet = (function ()
         /**
          *  @param {number} index
          */
-        getChild(index)
+        getChild : function getChild(index)
         {
             var node = null;
 
@@ -145,7 +145,7 @@ var RbTreeSet = (function ()
             return node;
         },
 
-        getLastChild()
+        getLastChild : function getLastChild()
         {
             return (this.hasRightChild() ? this._rightChild : this._leftChild);
         },
@@ -154,7 +154,7 @@ var RbTreeSet = (function ()
          *  @param {number} index
          *  @param {*} node
          */
-        setChild(index, node)
+        setChild : function setChild(index, node)
         {
             var detachedChild = null;
 
@@ -187,21 +187,21 @@ var RbTreeSet = (function ()
             return detachedChild;
         },
 
-        getChildCount()
+        getChildCount : function getChildCount()
         {
             return (this.hasLeftChild() ? 1 : 0)
                 + (this.hasRightChild() ? 1 : 0)
             ;
         },
 
-        getNonNilChildCount()
+        getNonNilChildCount : function getNonNilChildCount()
         {
             return (this.hasNonNilLeftChild() ? 1 : 0)
                 + (this.hasNonNilRightChild() ? 1 : 0)
             ;
         },
 
-        getLevel()
+        getLevel : function getLevel()
         {
             var level = 0;
             for(
@@ -213,39 +213,39 @@ var RbTreeSet = (function ()
             return level;
         },
 
-        isLeaf()
+        isLeaf : function isLeaf()
         {
             return !this.hasLeftChild() && !this.hasRightChild();
         },
 
-        isNonNilLeaf()
+        isNonNilLeaf : function isNonNilLeaf()
         {
             return !this.hasNonNilLeftChild()
                 && !this.hasNonNilRightChild()
             ;
         },
 
-        hasLeftChild()
+        hasLeftChild : function hasLeftChild()
         {
             return null !== this._leftChild;
         },
 
-        hasRightChild()
+        hasRightChild : function hasRightChild()
         {
             return null !== this._rightChild;
         },
 
-        hasNonNilLeftChild()
+        hasNonNilLeftChild : function hasNonNilLeftChild()
         {
             return this.hasLeftChild() && !this._leftChild.isNil();
         },
 
-        hasNonNilRightChild()
+        hasNonNilRightChild : function hasNonNilRightChild()
         {
             return this.hasRightChild() && !this._rightChild.isNil();
         },
 
-        getChildSlot()
+        getChildSlot : function getChildSlot()
         {
             return (
                 null !== this._parent
@@ -258,7 +258,7 @@ var RbTreeSet = (function ()
             );
         },
 
-        getChildSlotIndex()
+        getChildSlotIndex : function getChildSlotIndex()
         {
             return (
                 (this._parent !== null)
@@ -267,7 +267,7 @@ var RbTreeSet = (function ()
             );
         },
 
-        rotateLeft()
+        rotateLeft : function rotateLeft()
         {
             var pChildSlot = this.getChildSlot();
 
@@ -288,7 +288,7 @@ var RbTreeSet = (function ()
             }
         },
 
-        rotateRight()
+        rotateRight : function rotateRight()
         {
             var pChildSlot = this.getChildSlot();
 
@@ -309,7 +309,7 @@ var RbTreeSet = (function ()
             }
         },
 
-        findLeftMostNode()
+        findLeftMostNode : function findLeftMostNode()
         {
             var pCurrent = this;
             for(
@@ -321,7 +321,7 @@ var RbTreeSet = (function ()
             return pCurrent;
         },
 
-        findRightMostNode()
+        findRightMostNode : function findRightMostNode()
         {
             var pCurrent = this;
             for(
@@ -333,7 +333,7 @@ var RbTreeSet = (function ()
             return pCurrent;
         },
 
-        findLeftSubTreeRootNode()
+        findLeftSubTreeRootNode : function findLeftSubTreeRootNode()
         {
             var pCurrent = this;
             for(; pCurrent !== null; ) {
@@ -348,7 +348,7 @@ var RbTreeSet = (function ()
             return pCurrent;
         },
 
-        findRightSubTreeRootNode()
+        findRightSubTreeRootNode : function findRightSubTreeRootNode()
         {
             var pCurrent = this;
             for(; pCurrent !== null; ) {
@@ -367,7 +367,7 @@ var RbTreeSet = (function ()
          *  @param {Function} handler
          *  @param {*} [thisArg]
          */
-        traverseNonNilNodesByPostorder(handler)
+        traverseNonNilNodesByPostorder : function traverseNonNilNodesByPostorder(handler)
         {
             var thisArg = arguments[1];
 
@@ -402,7 +402,7 @@ var RbTreeSet = (function ()
             return continueTraversal;
         },
 
-        getGreater()
+        getGreater : function getGreater()
         {
             var pGreater = null;
 
@@ -423,7 +423,7 @@ var RbTreeSet = (function ()
             return pGreater;
         },
 
-        getLess()
+        getLess : function getLess()
         {
             var less = null;
 
@@ -438,7 +438,7 @@ var RbTreeSet = (function ()
             }
 
             return less;
-        },
+        }
     };
 
     /**
@@ -462,7 +462,7 @@ var RbTreeSet = (function ()
     CppValueIterator.prototype = {
         constructor : CppValueIterator,
 
-        equals(other)
+        equals : function equals(other)
         {
             var result = this === other;
 
@@ -475,12 +475,12 @@ var RbTreeSet = (function ()
             return result;
         },
 
-        isNull()
+        isNull : function isNull()
         {
             return null === this._node;
         },
 
-        dereference()
+        dereference : function dereference()
         {
             if(null === this._node) {
                 throw new Error("Cannot deference an iterator pointing the end of container.");
@@ -489,7 +489,7 @@ var RbTreeSet = (function ()
             return this._node._element;
         },
 
-        moveToNext()
+        moveToNext : function moveToNext()
         {
             var result = null !== this._node;
             if(result) {
@@ -499,7 +499,7 @@ var RbTreeSet = (function ()
             return result;
         },
 
-        moveToPrevious()
+        moveToPrevious : function moveToPrevious()
         {
             var result = true;
 
@@ -515,7 +515,7 @@ var RbTreeSet = (function ()
             }
 
             return result;
-        },
+        }
     };
 
     /**
@@ -542,7 +542,7 @@ var RbTreeSet = (function ()
         lessOrEqual : 1,
         greater : 2,
         greaterOrEqual : 3,
-        equal : 4,
+        equal : 4
     };
 
     /**
@@ -576,12 +576,12 @@ var RbTreeSet = (function ()
 
         size : 0,
 
-        getElementCount()
+        getElementCount : function getElementCount()
         {
             return this.size;
         },
 
-        isEmpty()
+        isEmpty : function isEmpty()
         {
             return null === this._root;
         },
@@ -590,7 +590,7 @@ var RbTreeSet = (function ()
          *  @param {Function} callback
          *  @param {*} [thisArg] 
          */
-        forEach(callback)
+        forEach : function forEach(callback)
         {
             if(!isFunction(callback)) {
                 throw new TypeError("'callback' must be a function.");
@@ -608,7 +608,7 @@ var RbTreeSet = (function ()
         /**
          *  @returns {CppValueIterator<T>} 
          */
-        begin()
+        begin : function begin()
         {
             return new CppValueIterator(
                 this,
@@ -619,22 +619,22 @@ var RbTreeSet = (function ()
         /**
          *  @returns {CppValueIterator<T>} 
          */
-        end()
+        end : function end()
         {
             return new CppValueIterator(this, null);
         },
 
-        entries()
+        entries : function entries()
         {
             return new PairIterator(this);
         },
 
-        keys()
+        keys : function keys()
         {
             return new ValueIterator(this);
         },
 
-        values()
+        values : function values()
         {
             return new ValueIterator(this);
         },
@@ -644,7 +644,7 @@ var RbTreeSet = (function ()
          *  @param {SearchTarget} searchTarget
          *  @returns {CppValueIterator<T>}
          */
-        find(element, searchTarget)
+        find : function find(element, searchTarget)
         {
             return new CppValueIterator(this, RbTreeSet_findNode(this, element, searchTarget));
         },
@@ -652,7 +652,7 @@ var RbTreeSet = (function ()
         /**
          *  @param {T} value
          */
-        has(value)
+        has : function has(value)
         {
             return !this.find(value, SearchTarget.equal).isNull();
         },
@@ -661,7 +661,7 @@ var RbTreeSet = (function ()
          *  @param {T} element
          *  @returns {CppValueIterator<T>}
          */
-        add(element)
+        add : function add(element)
         {
             var insertedNode = RbTreeSet_insertNodeInBst(this, element);
             if(null !== insertedNode) {
@@ -676,7 +676,7 @@ var RbTreeSet = (function ()
         /**
          *  @param {T} element
          */
-        "delete"(element)
+        "delete" : function (element)
         {
             var targetNode = RbTreeSet_findNode(this, element, SearchTarget.equal);
             var targetFound = targetNode !== null;
@@ -727,7 +727,7 @@ var RbTreeSet = (function ()
             return targetFound;
         },
 
-        clear()
+        clear : function clear()
         {
             if(!this.isEmpty()) {
                 this._root.traverseNonNilNodesByPostorder(
@@ -740,7 +740,7 @@ var RbTreeSet = (function ()
             }
         },
 
-        toString()
+        toString : function toString()
         {
             var str = '[';
 
@@ -759,7 +759,7 @@ var RbTreeSet = (function ()
             str += ']';
 
             return str;
-        },
+        }
     };
 
     /**
@@ -1211,11 +1211,11 @@ var RbTreeSet = (function ()
     PairIterator.prototype = {
         constructor : PairIterator,
 
-        next()
+        next : function next()
         {
             /** @type {IteratorReturnResult<[T, T]>} */var result = {
                 done : this._iter.equals(this._rbTreeSet.end()),
-                value : void 0,
+                value : void 0
             };
 
             if(!result.done) {
@@ -1226,7 +1226,7 @@ var RbTreeSet = (function ()
             }
 
             return result;
-        },
+        }
     };
 
     if(_isSymbolSupported) {
@@ -1250,11 +1250,11 @@ var RbTreeSet = (function ()
     ValueIterator.prototype = {
         constructor : ValueIterator,
 
-        next()
+        next : function next()
         {
             /** @type {IteratorReturnResult<T>} */var result = {
                 done : this._iter.equals(this._rbTreeSet.end()),
-                value : void 0,
+                value : void 0
             };
 
             if(!result.done) {
@@ -1264,7 +1264,7 @@ var RbTreeSet = (function ()
             }
 
             return result;
-        },
+        }
     };
 
     if(_isSymbolSupported) {
@@ -1278,5 +1278,5 @@ var RbTreeSet = (function ()
 })();
 
 module.exports = {
-    RbTreeSet : RbTreeSet,
+    RbTreeSet : RbTreeSet
 };

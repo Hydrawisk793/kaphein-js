@@ -1,5 +1,5 @@
-var isUndefinedOrNull = require("../utils/type-trait").isUndefinedOrNull;
-var isIterable = require("../utils/type-trait").isIterable;
+var isUndefinedOrNull = require("../type-trait").isUndefinedOrNull;
+var isIterable = require("../type-trait").isIterable;
 var isSymbolSupported = require("./is-symbol-supported").isSymbolSupported;
 
 var StringSet = (function ()
@@ -44,7 +44,7 @@ var StringSet = (function ()
          *  @param {Function} callback
          *  @param {*} [thisArg]
          */
-        forEach(callback)
+        forEach : function forEach(callback)
         {
             var thisArg = arguments[1];
 
@@ -55,15 +55,15 @@ var StringSet = (function ()
             }
         },
 
-        entries()
+        entries : function entries()
         {
             /**  @type {IterableIterator<[string, string]>} */var iterator = {
-                next()
+                next : function next()
                 {
                     var done = this._index >= this._values.length;
                     var result = {
                         value : void 0,
-                        done : done,
+                        done : done
                     };
 
                     if(!done) {
@@ -73,7 +73,7 @@ var StringSet = (function ()
                     }
 
                     return result;
-                },
+                }
             };
             iterator._values = Object.keys(this._map);
             iterator._index = 0;
@@ -87,15 +87,15 @@ var StringSet = (function ()
             return iterator;
         },
 
-        values()
+        values : function values()
         {
             /**  @type {IterableIterator<string>} */var iterator = {
-                next()
+                next : function next()
                 {
                     var done = this._index >= this._values.length;
                     var result = {
                         value : (done ? void 0 : this._values[this._index]),
-                        done : done,
+                        done : done
                     };
 
                     if(!done) {
@@ -103,7 +103,7 @@ var StringSet = (function ()
                     }
 
                     return result;
-                },
+                }
             };
             iterator._values = Object.keys(this._map);
             iterator._index = 0;
@@ -121,7 +121,7 @@ var StringSet = (function ()
          *  @param {string} value
          *  @returns {boolean}
          */
-        has(value)
+        has : function has(value)
         {
             if("string" !== typeof value) {
                 throw new TypeError("'value' must be a string.");
@@ -133,7 +133,7 @@ var StringSet = (function ()
         /**
          *  @param {string} value
          */
-        add(value)
+        add : function add(value)
         {
             if("string" !== typeof value) {
                 throw new TypeError("Only strings can be added.");
@@ -152,7 +152,7 @@ var StringSet = (function ()
         /**
          *  @param {string} value
          */
-        "delete"(value)
+        "delete" : function (value)
         {
             var exists = this.has(value);
 
@@ -164,11 +164,11 @@ var StringSet = (function ()
             return exists;
         },
 
-        clear()
+        clear : function clear()
         {
             this._map = {};
             this.size = 0;
-        },
+        }
     };
 
     StringSet.prototype.keys = StringSet.prototype.values;
@@ -183,5 +183,5 @@ var StringSet = (function ()
 })();
 
 module.exports = {
-    StringSet : StringSet,
+    StringSet : StringSet
 };

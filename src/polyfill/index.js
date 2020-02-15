@@ -7,3 +7,4 @@ require("./date");
 require("./string");
 require("./symbol");
 require("./reflect");
+require("./promise");

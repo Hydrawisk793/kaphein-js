@@ -1,6 +1,6 @@
 import { Comparer } from "./comparer";
 
-declare class PriorityQueue<T>
+export declare class PriorityQueue<T>
 {
     public constructor(
         comparer : Comparer<T>,
@@ -23,7 +23,3 @@ declare class PriorityQueue<T>
 
     public clear() : void;
 }
-
-export {
-    PriorityQueue,
-};

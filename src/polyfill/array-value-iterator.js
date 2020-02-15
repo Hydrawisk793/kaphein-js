@@ -15,12 +15,12 @@ ArrayValueIterator.prototype = {
     /**
      *  @returns {IteratorResult<T>}
      */
-    next()
+    next : function next()
     {
         var done = this._index >= this._arr.length;
         var result = {
             value : (done ? void 0 : this._arr[this._index]),
-            done : done,
+            done : done
         };
 
         if(!done) {
@@ -28,9 +28,9 @@ ArrayValueIterator.prototype = {
         }
 
         return result;
-    },
+    }
 };
 
 module.exports = {
-    ArrayValueIterator : ArrayValueIterator,
+    ArrayValueIterator : ArrayValueIterator
 };
