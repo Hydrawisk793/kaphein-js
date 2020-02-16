@@ -1,4 +1,3 @@
-// var typeTrait = require("../type-trait");
 var isSymbolSupported = require("./is-symbol-supported").isSymbolSupported;
 
 var ArrayQueue = (function ()
