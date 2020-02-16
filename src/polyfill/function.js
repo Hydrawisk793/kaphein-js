@@ -1,5 +1,4 @@
-var typeTrait = require("../type-trait");
-var isFunction = typeTrait.isFunction;
+var isFunction = require("../type-trait").isFunction;
 
 /* eslint-disable no-extend-native */
 
@@ -17,22 +16,24 @@ if(!Function.prototype.bind) {
             }
 
             var args = _slice.call(arguments, 1);
-            function TempFunction() {}
-            var _this = this;
-            function FunctionWrapper()
+
+            function T() {}
+
+            var thisRef = this;
+            function W()
             {
-                return _this.apply(
-                    (this instanceof TempFunction ? this : thisArg),
+                return thisRef.apply(
+                    (this instanceof T ? this : thisArg),
                     args.concat(_slice.call(arguments))
                 );
             }
 
             if(this.prototype) {
-                TempFunction.prototype = this.prototype;
+                T.prototype = this.prototype;
             }
-            FunctionWrapper.prototype = new TempFunction();
+            W.prototype = new T();
 
-            return FunctionWrapper;
+            return W;
         };
     })();
 }

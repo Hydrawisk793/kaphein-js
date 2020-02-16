@@ -2,7 +2,7 @@ var isString = require("./type-trait").isString;
 var isNonNullObject = require("./type-trait").isNonNullObject;
 var ArraySet = require("./collection").ArraySet;
 
-var Logger = (function ()
+module.exports = (function ()
 {
     var _arraySlice = Array.prototype.slice;
 
@@ -130,9 +130,7 @@ var Logger = (function ()
         return decoratedArgs;
     }
 
-    return Logger;
+    return {
+        Logger : Logger
+    };
 })();
-
-module.exports = {
-    Logger : Logger
-};

@@ -3,7 +3,7 @@ var isFunction = require("./type-trait").isFunction;
 var StringKeyMap = require("./collection").StringKeyMap;
 var ArrayMap = require("./collection").ArrayMap;
 
-var EventNotifier = (function ()
+module.exports = (function ()
 {
     var _Map = ((Map && "function" === typeof Map) ? Map : ArrayMap);
 
@@ -184,9 +184,7 @@ var EventNotifier = (function ()
         return handlerMap;
     }
 
-    return EventNotifier;
+    return {
+        EventNotifier : EventNotifier
+    };
 })();
-
-module.exports = {
-    EventNotifier : EventNotifier
-};
