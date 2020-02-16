@@ -1,34 +1,39 @@
-declare class EventNotifier
+export declare interface EventNotifierAddOption
 {
-    public constructor(
-        options? : {
-            Map? : Function,
-            Set? : Function,
-            Symbol? : Function
-        }
-    );
+    once? : boolean;
+}
+
+export declare class EventNotifier
+{
+    public constructor();
+
+    public getHandlerCountOf(
+        eventName : string
+    ) : number;
 
     public add(
         eventName : string,
-        handler : Function
-    ) : EventNotifier;
+        handler : Function,
+        option? : EventNotifierAddOption
+    ) : this;
 
     public remove(
         eventName : string,
         handler : Function
-    ) : EventNotifier;
+    ) : this;
 
     public removeAll(
         eventName : string,
         handler : Function
-    ) : EventNotifier;
+    ) : this;
 
     public notify(
         eventName : string,
         eventArgs : any
-    ) : EventNotifier;
-}
+    ) : any[];
 
-export {
-    EventNotifier
-};
+    public dispatch(
+        eventName : string,
+        eventArgs : any
+    ) : this;
+}

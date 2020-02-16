@@ -1,149 +1,191 @@
-var typeTrait = require("./type-trait");
-var isUndefinedOrNull = typeTrait.isUndefinedOrNull;
-var isString = typeTrait.isString;
-var isFunction = typeTrait.isFunction;
+var isString = require("./type-trait").isString;
+var isFunction = require("./type-trait").isFunction;
+var StringKeyMap = require("./collection").StringKeyMap;
+var ArrayMap = require("./collection").ArrayMap;
 
-var assertParameterIsString = function (name, value)
+var EventNotifier = (function ()
 {
-    if(!isString(value)) {
-        throw new TypeError("'" + name + "' must be a string.");
-    }
-};
+    var _Map = ((Map && "function" === typeof Map) ? Map : ArrayMap);
 
-var assertParameterIsFunction = function (name, value)
-{
-    if(!isFunction(value)) {
-        throw new TypeError("'" + name + "' must be a function.");
-    }
-};
+    /**
+     *  @typedef {{
+            handler : Function;
+            once : boolean;
+        }} HandlerDescriptor
+     */
 
-/**
- * @param {*} options
- * @returns {NodeJS.Global|Window}
- */
-var findGlobal = function (options)
-{
-    var _global;
-
-    if("global" in options) {
-        _global = options["global"];
+    /**
+     *  @constructor
+     */
+    function EventNotifier()
+    {
+        /** @type {Map<string, Map<Function, HandlerDescriptor>>} */this._handlerMaps = new StringKeyMap();
     }
-    else {
-        _global = (
-            "undefined" !== typeof window
-            ? /** @type {Window} */window
-            : global
+
+    EventNotifier.prototype = {
+        constructor : EventNotifier,
+
+        getHandlerCountOf : function getHandlerCountOf(eventName)
+        {
+            var count = 0;
+
+            var handlerMap = EventNotifier_getHandlerMap(this, eventName);
+            if(null !== handlerMap) {
+                count = handlerMap.size;
+            }
+
+            return count;
+        },
+
+        add : function add(eventName, handler)
+        {
+            if(!isFunction(handler)) {
+                throw new TypeError("'handler' must be a function.");
+            }
+
+            var option = arguments[2] ? arguments[2] : {};
+
+            var handlerMap = EventNotifier_getHandlerMap(this, eventName, true);
+            if(!handlerMap.has(handler)) {
+                handlerMap.set(
+                    handler,
+                    {
+                        handler : handler,
+                        once : option.once
+                    }
+                );
+            }
+
+            return this;
+        },
+
+        remove : function remove(eventName, handler)
+        {
+            if(!isFunction(handler)) {
+                throw new TypeError("'handler' must be a function.");
+            }
+
+            var handlerMap = EventNotifier_getHandlerMap(this, eventName);
+            if(null !== handlerMap) {
+                handlerMap["delete"](handler);
+            }
+
+            return this;
+        },
+
+        removeAll : function removeAll(eventName)
+        {
+            var handlerMap = EventNotifier_getHandlerMap(this, eventName);
+            if(null !== handlerMap) {
+                handlerMap.clear();
+            }
+
+            return this;
+        },
+
+        /**
+         *  @param {string} eventName
+         *  @param {*} [eventArgs]
+         */
+        notify : function notify(eventName, eventArgs)
+        {
+            /** @type {any[]} */var results = [];
+
+            var handlerMap = EventNotifier_getHandlerMap(this, eventName);
+            if(null !== handlerMap && handlerMap.size > 0) {
+                var handlersToBeRemoved = [];
+                var i = 0;
+
+                var descriptors = Array.from(handlerMap.values());
+                for(i = 0; i < descriptors.length; ++i) {
+                    var descriptor = descriptors[i];
+                    var handler = descriptor.handler;
+
+                    if(descriptor.once) {
+                        handlersToBeRemoved.push(handler);
+                    }
+
+                    results.push(handler(eventArgs));
+                }
+
+                for(i = 0; i < handlersToBeRemoved.length; ++i) {
+                    handlerMap["delete"](handlersToBeRemoved[i]);
+                }
+            }
+
+            return results;
+        },
+
+        /**
+         *  @param {string} eventName
+         *  @param {*} [eventArgs]
+         */
+        dispatch : function dispatch(eventName, eventArgs)
+        {
+            var handlerMap = EventNotifier_getHandlerMap(this, eventName);
+            if(null !== handlerMap && handlerMap.size > 0) {
+                var handlersToBeRemoved = [];
+                var i = 0;
+
+                var descriptors = Array.from(handlerMap.values());
+                for(i = 0; i < descriptors.length; ++i) {
+                    var descriptor = descriptors[i];
+                    var handler = descriptor.handler;
+
+                    if(descriptor.once) {
+                        handlersToBeRemoved.push(handler);
+                    }
+
+                    EventNotifier_dispatchHandlerAndArgs(handler, eventArgs);
+                }
+
+                for(i = 0; i < handlersToBeRemoved.length; ++i) {
+                    handlerMap["delete"](handlersToBeRemoved[i]);
+                }
+            }
+
+            return this;
+        }
+    };
+
+    function EventNotifier_dispatchHandlerAndArgs(handler, eventArgs)
+    {
+        // The JavaScript runtime will queue the execution of the callback in the internal event queue immediately,  
+        // and the callback will be pushed into the internal stack after the stack is empty.
+        setTimeout(
+            function ()
+            {
+                handler(eventArgs);
+            },
+            0
         );
     }
 
-    return _global;
-};
-
-/**
- * @param {string} className
- * @param {NodeJS.Global|Window} globalObj
- * @param {*} options
- * @returns {Function}
- */
-var findClass = function (className, globalObj, options)
-{
-    var klass = (
-        (className in options)
-        ? options[className]
-        : globalObj[className]
-    );
-    if("function" !== typeof klass) {
-        throw new Error("Failed to find the constructor of '" + className + "' class. Please provide a suitable one via 'options' parameter.");
-    }
-
-    return klass;
-};
-
-var EventNotifier = function (options)
-{
-    if(isUndefinedOrNull(options)) {
-        options = {};
-    }
-
-    var _global = findGlobal(options);
-
-    /** @type {MapConstructor} */this._Map = findClass("Map", _global, options);
-    /** @type {SetConstructor} */this._Set = findClass("Set", _global, options);
-    /** @type {SymbolConstructor} */this._Symbol = findClass("Symbol", _global, options);
-
-    /** @type {Map<string, Set<Function>>} */ this._handlerSets = new this._Map();
-};
-EventNotifier.prototype.constructor = EventNotifier;
-
-EventNotifier.prototype.add = function (eventName, handler)
-{
-    assertParameterIsFunction("handler", handler);
-
-    this._getHandlerSet(eventName).add(handler);
-
-    return this;
-};
-
-EventNotifier.prototype.remove = function (eventName, handler)
-{
-    assertParameterIsFunction("handler", handler);
-
-    this._getHandlerSet(eventName)["delete"](handler);
-
-    return this;
-};
-
-EventNotifier.prototype.removeAll = function (eventName)
-{
-    this._getHandlerSet(eventName).clear();
-
-    return this;
-};
-
-/**
- * @param {string} eventName
- * @param {*} [eventArgs]
- * @returns {EventNotifier}
- */
-EventNotifier.prototype.notify = function (eventName, eventArgs)
-{
-    var i;
-    var handler;
-    var handlerSet = this._getHandlerSet(eventName);
-
-    var iter = handlerSet[this._Symbol.iterator]();
-    if(!isUndefinedOrNull(iter)) {
-        for(i = iter.next(); !i.done; i = iter.next()) {
-            handler = i.value;
-
-            if(isFunction(handler)) {
-                handler(eventArgs);
-            }
+    /**
+     *  @param {EventNotifier} thisRef
+     *  @param {string} eventName
+     *  @param {boolean} [createIfNotExists]
+     */
+    function EventNotifier_getHandlerMap(thisRef, eventName)
+    {
+        if(!isString(eventName)) {
+            throw new TypeError("'eventName' must be a string.");
         }
+
+        /** @type {Map<Function, HandlerDescriptor> | null} */var handlerMap = null;
+        if(thisRef._handlerMaps.has(eventName)) {
+            handlerMap = thisRef._handlerMaps.get(eventName);
+        }
+        else if(arguments[2]) {
+            handlerMap = new _Map();
+            thisRef._handlerMaps.set(eventName, handlerMap);
+        }
+
+        return handlerMap;
     }
 
-    return this;
-}
-
-/**
- * @param {string} eventName
- * @returns {Set<Function>}
- */
-EventNotifier.prototype._getHandlerSet = function (eventName)
-{
-    assertParameterIsString("eventName", eventName);
-
-    /** @type {Set<Function>} */ var handlerSet = null;
-    if(this._handlerSets.has(eventName)) {
-        handlerSet = this._handlerSets.get(eventName);
-    }
-    else {
-        handlerSet = new this._Set();
-        this._handlerSets.set(eventName, handlerSet);
-    }
-
-    return handlerSet;
-};
+    return EventNotifier;
+})();
 
 module.exports = {
     EventNotifier : EventNotifier
