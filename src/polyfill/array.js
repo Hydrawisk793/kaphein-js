@@ -95,7 +95,7 @@ if(!Array.from) {
          *  @param {ArrayLike<T>} arrayLike
          *  @param {Function} [mapFunction]
          *  @param {*} [thisArg]
-         *  @return {T[]}
+         *  @returns {T[]}
          */
         function _arrayFromFunctionBody(arr, traitAssertionFunc, pushBackMethodKey, arrayLike, mapFunction, thisArg)
         {
@@ -139,9 +139,9 @@ if(!Array.from) {
 
 if(!Array.of) {
     Array.of = function ()
-   {
-       return Array.prototype.slice.call(arguments);
-   };
+    {
+        return Array.prototype.slice.call(arguments);
+    };
 }
 
 if(!Array.isArray) {
@@ -231,13 +231,12 @@ Array.prototype.sort = (function ()
 if(!Array.prototype.copyWithin) {
     Array.prototype.copyWithin = function (target, start)
     {
-        var i, j;
         var len = this.length;
         start = _adjustNegativeIndex((isUndefined(start) ? 0 : start), len);
         var end = _adjustNegativeIndex((isUndefined(arguments[2]) ? len : arguments[2]), len);
 
         target = _adjustNegativeIndex(target, len);
-        for(i = target + (end - start), j = end; i > target && j > start; ) {
+        for(var i = target + (end - start), j = end; i > target && j > start; ) {
             --i;
             --j;
 
@@ -253,7 +252,6 @@ if(!Array.prototype.copyWithin) {
 if(!Array.prototype.fill) {
     Array.prototype.fill = function (value)
     {
-        var i;
         var len = this.length;
         var start = _adjustNegativeIndex((isUndefined(arguments[1]) ? 0 : arguments[1]), len);
         var end = _adjustNegativeIndex((isUndefined(arguments[2]) ? len : arguments[2]), len);
@@ -267,7 +265,7 @@ if(!Array.prototype.fill) {
             }
         }
         else {
-            for(i = start; i < end; ++i) {
+            for(var i = start; i < end; ++i) {
                 this[i] = value;
             }
         }
@@ -279,11 +277,10 @@ if(!Array.prototype.fill) {
 if(!Array.prototype.map) {
     Array.prototype.map = function (callback)
     {
-        var i, len;
         var thisArg = arguments[1];
-        var result = [];
 
-        for(i = 0, len = this.length; i < len; ++i) {
+        var result = [];
+        for(var i = 0, len = this.length; i < len; ++i) {
             result.push(callback.call(thisArg, _arrayLikeGetAt(this, i), i, this));
         }
 
@@ -294,10 +291,8 @@ if(!Array.prototype.map) {
 if(!Array.prototype.reduce) {
     Array.prototype.reduce = function (callback)
     {
-        var i, len;
         var acc = _selectInitialValueForReduce(this, arguments[1]);
-
-        for(i = 0, len = this.length; i < len ; ++i) {
+        for(var i = 0, len = this.length; i < len ; ++i) {
             acc = callback(acc, _arrayLikeGetAt(this, i), i, this);
         }
 
@@ -308,10 +303,8 @@ if(!Array.prototype.reduce) {
 if(!Array.prototype.reduceRight) {
     Array.prototype.reduceRight = function (callback)
     {
-        var i;
         var acc = _selectInitialValueForReduce(this, arguments[1]);
-
-        for(i = this.length; i > 0; ) {
+        for(var i = this.length; i > 0; ) {
             --i;
             acc = callback(acc, _arrayLikeGetAt(this, i), i, this);
         }
@@ -323,11 +316,11 @@ if(!Array.prototype.reduceRight) {
 if(!Array.prototype.findIndex) {
     Array.prototype.findIndex = function (callback)
     {
-        var foundIndex;
-        var index;
-        var thisArg;
-
-        for(thisArg = arguments[1], foundIndex = -1, index = 0; foundIndex < 0 && index < this.length; ++index) {
+        for(
+            var thisArg = arguments[1], foundIndex = -1, index = 0;
+            foundIndex < 0 && index < this.length;
+            ++index
+        ) {
             if(callback.call(thisArg, this[index], index, this)) {
                 foundIndex = index;
             }
@@ -347,10 +340,9 @@ if(!Array.prototype.some) {
 if(!Array.prototype.every) {
     Array.prototype.every = function (callback)
     {
-        var index, result;
         var thisArg = arguments[1];
 
-        for(result = true, index = 0; result && index < this.length; ++index) {
+        for(var result = true, index = 0; result && index < this.length; ++index) {
             result = callback.call(thisArg, this[index], index, this);
         }
 
@@ -400,10 +392,7 @@ if(!Array.prototype.includes) {
 if(!Array.prototype.forEach) {
     Array.prototype.forEach = function (callback)
     {
-        var i;
-        var thisArg;
-
-        for(i = 0, thisArg = arguments[1]; i < this.length; ++i) {
+        for(var i = 0, thisArg = arguments[1]; i < this.length; ++i) {
             callback.call(thisArg, this[i], i, this);
         }
     };

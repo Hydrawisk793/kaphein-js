@@ -1,3 +1,4 @@
+require("./console");
 require("./object");
 require("./function");
 require("./array");

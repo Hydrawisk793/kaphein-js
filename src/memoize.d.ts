@@ -1,6 +1,8 @@
 export declare function memoize<F extends Function>(
     func : F,
     option? : {
+        thisArg? : any;
+
         equalComparer? : (lhs : any, rhs : any) => boolean;
 
         argsEqualComparer? : (prevArgs : any[], nextArgs : any[]) => boolean;
@@ -10,7 +12,5 @@ export declare function memoize<F extends Function>(
         alwaysEvaluate? : boolean;
 
         reuseResultReferenceIfPossible? : boolean;
-
-        thisArg? : any;
     }
 ) : typeof func;

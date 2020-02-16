@@ -2,42 +2,45 @@ var isUndefinedOrNull = require("./type-trait").isUndefinedOrNull;
 var isCallable = require("./type-trait").isCallable;
 var deepEquals = require("./object-utils/comparison").deepEquals;
 
-var _slice = Array.prototype.slice;
-
-function memoize(func, option)
+module.exports = (function ()
 {
-    option = (!isUndefinedOrNull(option) ? option : {});
-    var reuseResultReferenceIfPossible = (!("reuseResultReferenceIfPossible" in option) ? true : (!!option.reuseResultReferenceIfPossible));
-    var equalComparer = (isCallable(option.equalComparer) ? option.equalComparer : deepEquals);
-    var scope = {
-        func : func,
-        equalComparer : equalComparer,
-        argsEqualComparer : (isCallable(option.argsEqualComparer) ? option.argsEqualComparer : equalComparer),
-        resultEqualComparer : (isCallable(option.resultEqualComparer) ? option.resultEqualComparer : equalComparer),
-        /**  @type {any[]} */lastArgs : null,
-        lastResult : void 0,
-        thisArg : option.thisArg
-    };
+    var _slice = Array.prototype.slice;
 
-    return function ()
+    function memoize(func, option)
     {
-        var newResult;
-        /**  @type {any[]} */var args = _slice.call(arguments);
+        option = (!isUndefinedOrNull(option) ? option : {});
+        var reuseResultReferenceIfPossible = (!("reuseResultReferenceIfPossible" in option) ? true : (!!option.reuseResultReferenceIfPossible));
+        var equalComparer = (isCallable(option.equalComparer) ? option.equalComparer : deepEquals);
+        var scope = {
+            func : func,
+            equalComparer : equalComparer,
+            argsEqualComparer : (isCallable(option.argsEqualComparer) ? option.argsEqualComparer : equalComparer),
+            resultEqualComparer : (isCallable(option.resultEqualComparer) ? option.resultEqualComparer : equalComparer),
+            /**  @type {any[]} */lastArgs : null,
+            lastResult : void 0,
+            thisArg : option.thisArg
+        };
 
-        if(!!option.alwaysEvaluate || !scope.argsEqualComparer(scope.lastArgs, args)) {
-            newResult = scope.func.apply(scope.thisArg, args);
+        return function ()
+        {
+            var newResult;
+            /**  @type {any[]} */var args = _slice.call(arguments);
 
-            if(!reuseResultReferenceIfPossible || !scope.resultEqualComparer(scope.lastResult, newResult)) {
-                scope.lastResult = newResult;
+            if(!!option.alwaysEvaluate || !scope.argsEqualComparer(scope.lastArgs, args)) {
+                newResult = scope.func.apply(scope.thisArg, args);
+
+                if(!reuseResultReferenceIfPossible || !scope.resultEqualComparer(scope.lastResult, newResult)) {
+                    scope.lastResult = newResult;
+                }
+
+                scope.lastArgs = args;
             }
 
-            scope.lastArgs = args;
-        }
+            return scope.lastResult;
+        };
+    }
 
-        return scope.lastResult;
+    return {
+        memoize : memoize
     };
-}
-
-module.exports = {
-    memoize : memoize
-};
+})();

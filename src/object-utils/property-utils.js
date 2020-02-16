@@ -17,18 +17,18 @@ module.exports = (function ()
         var finalMethodName = "";
         var suffix = fieldName[0].toUpperCase() + fieldName.slice(1);
         var methodName;
-    
+
         for(finalMethodName = "", i = 0; "" === finalMethodName && i < getterPrefixes.length; ++i) {
             methodName = getterPrefixes[i] + suffix;
-    
+
             if(isCallable(obj[methodName])) {
                 finalMethodName = methodName;
             }
         }
-    
+
         return finalMethodName;
     }
-    
+
     /**
      *  @typedef {import("./property-utils").PropertyPath} PropertyPath
      *  @typedef {import("./property-utils").PropertyTraversalOption} PropertyTraversalOption
@@ -49,9 +49,9 @@ module.exports = (function ()
         var finalFieldName;
         var fieldIsFunction;
         var getterArgs;
-    
+
         option = isUndefinedOrNull(option) ? {} : option;
-    
+
         if(isString(path)) {
             path = path
                 .split(".")
@@ -66,11 +66,11 @@ module.exports = (function ()
         else if(!isArray(path)) {
             throw new TypeError("'path' must be a string or an array.");
         }
-    
+
         for(pathToken = null, currentObj = obj, i = 0; i < path.length; ++i) {
             prevPathToken = pathToken;
             pathToken = path[i];
-    
+
             if(isUndefinedOrNull(currentObj)) {
                 if(option.throwErrorIfNotFound) {
                     throw new Error(null === prevPathToken ? "The root is undefined or null." : "'" + prevPathToken + "' is undefined or null.");
@@ -92,11 +92,11 @@ module.exports = (function ()
                 else {
                     throw new TypeError("Each path token must be a string or an array.");
                 }
-    
+
                 if(i === path.length - 1 && null === getterArgs && isArray(option.getterArgs)) {
                     getterArgs = option.getterArgs;
                 }
-    
+
                 finalFieldName = "";
                 if(currentFieldName in currentObj) {
                     finalFieldName = currentFieldName;
@@ -108,7 +108,7 @@ module.exports = (function ()
                         fieldIsFunction = true;
                     }
                 }
-    
+
                 if("" !== finalFieldName) {
                     if(fieldIsFunction) {
                         if(isArray(getterArgs) && getterArgs.length > 0) {
@@ -131,7 +131,7 @@ module.exports = (function ()
                 }
             }
         }
-    
+
         return currentObj;
     }
 

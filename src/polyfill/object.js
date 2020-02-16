@@ -1,6 +1,5 @@
-var typeTrait = require("../type-trait");
-var isUndefined = typeTrait.isUndefined;
-var isUndefinedOrNull = typeTrait.isUndefinedOrNull;
+var isUndefined = require("../type-trait").isUndefined;
+var isUndefinedOrNull = require("../type-trait").isUndefinedOrNull;
 
 /* eslint-disable no-extend-native */
 
@@ -121,6 +120,29 @@ Object.keys = (function ()
         };
     }
 }());
+
+if(!Object.entries) {
+    Object.entries = (function ()
+    {
+        /**
+         *  @template T
+         *  @param {T extends Record<string | number | symbol, any> ? T : Record<string | number | symbol, any>} obj
+         */
+        function entries(obj)
+        {
+            /**  @type {keyof T[]} */var keys = Object.keys(obj);
+            /**  @type {[keyof T, T[keyof T]][]} */var pairs = [];
+            for(var i = 0; i < keys.length; ++i) {
+                var key = keys[i];
+                pairs.push(key, obj[key]);
+            }
+
+            return pairs;
+        }
+
+        return entries;
+    })();
+}
 
 if(!Object.create) {
     Object.create = function create(proto)

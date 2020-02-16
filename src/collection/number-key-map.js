@@ -157,7 +157,7 @@ function NumberKeyMap()
  */
 NumberKeyMap.wrap = function wrap(src)
 {
-    var map = /** @type {NumberKeyMap<T>} */new NumberKeyMap();
+    var map = /**  @type {NumberKeyMap<T>} */new NumberKeyMap();
     map.attach(src);
 
     return map;

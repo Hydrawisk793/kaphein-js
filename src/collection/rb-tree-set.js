@@ -2,6 +2,7 @@ var isUndefined = require("../type-trait").isUndefined;
 var isIterable = require("../type-trait").isIterable;
 var isFunction = require("../type-trait").isFunction;
 var isSymbolSupported = require("./is-symbol-supported").isSymbolSupported;
+var RbTreeSearchTarget = require("./rb-tree-search-target").RbTreeSearchTarget;
 
 var RbTreeSet = (function ()
 {
@@ -23,10 +24,10 @@ var RbTreeSet = (function ()
         var leftChild = arguments[3];
         var rightChild = arguments[4];
 
-        /** @type {RbTreeNode<T>} */this._parent = isUndefined(parent) ? null : parent;
-        /** @type {RbTreeNode<T>} */this._leftChild = isUndefined(leftChild) ? null : leftChild;
-        /** @type {RbTreeNode<T>} */this._rightChild = isUndefined(rightChild) ? null : rightChild;
-        /** @type {T} */this._element = element;
+        /**  @type {RbTreeNode<T>} */this._parent = isUndefined(parent) ? null : parent;
+        /**  @type {RbTreeNode<T>} */this._leftChild = isUndefined(leftChild) ? null : leftChild;
+        /**  @type {RbTreeNode<T>} */this._rightChild = isUndefined(rightChild) ? null : rightChild;
+        /**  @type {T} */this._element = element;
         this._red = !!red;
     }
 
@@ -445,7 +446,7 @@ var RbTreeSet = (function ()
      *  @template T
      *  @readonly
      */
-    RbTreeNode.nil = new RbTreeNode(/** @type {T} */(null), false, null, null, null);
+    RbTreeNode.nil = new RbTreeNode(/**  @type {T} */(null), false, null, null, null);
 
     /**
      *  @template T
@@ -534,18 +535,6 @@ var RbTreeSet = (function ()
     }
 
     /**
-     *  @readonly
-     *  @enum {number}
-     */
-    var SearchTarget = {
-        less : 0,
-        lessOrEqual : 1,
-        greater : 2,
-        greaterOrEqual : 3,
-        equal : 4
-    };
-
-    /**
      *  @template T
      *  @constructor
      *  @param {Iterable<T>} [iterable]
@@ -556,10 +545,10 @@ var RbTreeSet = (function ()
         var iterable = arguments[0];
         var comparer = arguments[1];
 
-        /** @type {Comparer<T>} */this._comparer = isFunction(comparer) ? comparer : _defaultComparer;
+        /**  @type {Comparer<T>} */this._comparer = isFunction(comparer) ? comparer : _defaultComparer;
         this.size = 0;
-        /** @type {RbTreeNode<T>} */this._root = null;
-        /** @type {RbTreeNode<T>[]} */this._garbageNodes = [];
+        /**  @type {RbTreeNode<T>} */this._root = null;
+        /**  @type {RbTreeNode<T>[]} */this._garbageNodes = [];
 
         if(isIterable(iterable)) {
             var entriesFuncKey = (_isSymbolSupported ? Symbol.iterator : "entries");
@@ -569,7 +558,7 @@ var RbTreeSet = (function ()
         }
     }
 
-    RbTreeSet.SearchTarget = SearchTarget;
+    RbTreeSet.SearchTarget = RbTreeSearchTarget;
 
     RbTreeSet.prototype = {
         constructor : RbTreeSet,
@@ -641,7 +630,24 @@ var RbTreeSet = (function ()
 
         /**
          *  @param {T} element
-         *  @param {SearchTarget} searchTarget
+         *  @param {RbTreeSearchTarget} searchTarget
+         *  @returns {T | undefined}
+         */
+        findValue : function find(element, searchTarget)
+        {
+            var value = void 0;
+
+            var iter = this.find(element, searchTarget);
+            if(!iter.equals(this.end())) {
+                value = iter.dereference();
+            }
+
+            return value;
+        },
+
+        /**
+         *  @param {T} element
+         *  @param {RbTreeSearchTarget} searchTarget
          *  @returns {CppValueIterator<T>}
          */
         find : function find(element, searchTarget)
@@ -654,7 +660,7 @@ var RbTreeSet = (function ()
          */
         has : function has(value)
         {
-            return !this.find(value, SearchTarget.equal).isNull();
+            return !this.find(value, RbTreeSearchTarget.equal).isNull();
         },
 
         /**
@@ -678,7 +684,7 @@ var RbTreeSet = (function ()
          */
         "delete" : function (element)
         {
-            var targetNode = RbTreeSet_findNode(this, element, SearchTarget.equal);
+            var targetNode = RbTreeSet_findNode(this, element, RbTreeSearchTarget.equal);
             var targetFound = targetNode !== null;
             if(targetFound) {
                 --this.size;
@@ -770,7 +776,7 @@ var RbTreeSet = (function ()
      */
     function RbTreeSet_constructNode(thisRef, parent, element)
     {
-        /** @type {RbTreeNode<T>} */var node = null;
+        /**  @type {RbTreeNode<T>} */var node = null;
         if(thisRef._garbageNodes.length < 1) {
             node = new RbTreeNode(element, true, parent, RbTreeNode.nil, RbTreeNode.nil);
         }
@@ -806,7 +812,7 @@ var RbTreeSet = (function ()
      *  @template T
      *  @param {RbTreeSet<T>} thisRef
      *  @param {T} element
-     *  @param {SearchTarget} searchTarget
+     *  @param {RbTreeSearchTarget} searchTarget
      */
     function RbTreeSet_findNode(thisRef, element, searchTarget)
     {
@@ -828,7 +834,7 @@ var RbTreeSet = (function ()
         }
 
         switch(searchTarget) {
-        case SearchTarget.less:
+        case RbTreeSearchTarget.less:
             if(null === currentNode || currentNode.isNil()) {
                 currentNode = prevNode;
             }
@@ -840,7 +846,7 @@ var RbTreeSet = (function ()
                 currentNode = currentNode.getLess();
             }
         break;
-        case SearchTarget.lessOrEqual:
+        case RbTreeSearchTarget.lessOrEqual:
             if(null !== currentNode && !currentNode.isNil()) {
                 return currentNode;
             }
@@ -857,7 +863,7 @@ var RbTreeSet = (function ()
                 }
             }
         break;
-        case SearchTarget.greater:
+        case RbTreeSearchTarget.greater:
             if(null === currentNode || currentNode.isNil()) {
                 currentNode = prevNode;
             }
@@ -869,7 +875,7 @@ var RbTreeSet = (function ()
                 currentNode = currentNode.getGreater();
             }
         break;
-        case SearchTarget.greaterOrEqual:
+        case RbTreeSearchTarget.greaterOrEqual:
             if(null !== currentNode && !currentNode.isNil()) {
                 return currentNode;
             }
@@ -886,7 +892,7 @@ var RbTreeSet = (function ()
                 }
             }
         break;
-        case SearchTarget.equal:
+        case RbTreeSearchTarget.equal:
         break;
         default:
             throw new Error("An unknown search target has been detected.");
@@ -951,9 +957,9 @@ var RbTreeSet = (function ()
     function RbTreeSet_disconnectNodeFromBst(thisRef, target)
     {
         var out = {
-            /** @type {RbTreeNode<T>} */pRemovalTarget : null,
-            /** @type {RbTreeNode<T>} */pReplacement : null,
-            /** @type {RbTreeNode<T>} */pParentOfReplacement : null,
+            /**  @type {RbTreeNode<T>} */pRemovalTarget : null,
+            /**  @type {RbTreeNode<T>} */pReplacement : null,
+            /**  @type {RbTreeNode<T>} */pParentOfReplacement : null,
             pReplacementChildSlot : null
         };
 
@@ -1213,7 +1219,7 @@ var RbTreeSet = (function ()
 
         next : function next()
         {
-            /** @type {IteratorReturnResult<[T, T]>} */var result = {
+            /**  @type {IteratorReturnResult<[T, T]>} */var result = {
                 done : this._iter.equals(this._rbTreeSet.end()),
                 value : void 0
             };
@@ -1252,7 +1258,7 @@ var RbTreeSet = (function ()
 
         next : function next()
         {
-            /** @type {IteratorReturnResult<T>} */var result = {
+            /**  @type {IteratorReturnResult<T>} */var result = {
                 done : this._iter.equals(this._rbTreeSet.end()),
                 value : void 0
             };

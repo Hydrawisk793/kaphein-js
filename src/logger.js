@@ -2,7 +2,7 @@ var isString = require("./type-trait").isString;
 var isNonNullObject = require("./type-trait").isNonNullObject;
 var ArraySet = require("./collection").ArraySet;
 
-var Logger = (function ()
+module.exports = (function ()
 {
     var _arraySlice = Array.prototype.slice;
 
@@ -17,9 +17,9 @@ var Logger = (function ()
      */
     function Logger()
     {
-        /** @type {Console|null} */this._console = null;
+        /**  @type {Console|null} */this._console = null;
 
-        /** @type {Console|string|null} */var arg = arguments[0];
+        /**  @type {Console|string|null} */var arg = arguments[0];
         if(isNonNullObject(arg)) {
             this._console = arg;
         }
@@ -27,7 +27,7 @@ var Logger = (function ()
             throw new Error("Logging to file is not implemeted yet.");
         }
 
-        /** @type {Set<LoggerMessageDecorator>} */this._messageDecorators = new _Set();
+        /**  @type {Set<LoggerMessageDecorator>} */this._messageDecorators = new _Set();
     }
 
     Logger.prototype = {
@@ -130,9 +130,7 @@ var Logger = (function ()
         return decoratedArgs;
     }
 
-    return Logger;
+    return {
+        Logger : Logger
+    };
 })();
-
-module.exports = {
-    Logger : Logger
-};

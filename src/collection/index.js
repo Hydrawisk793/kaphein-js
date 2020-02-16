@@ -9,7 +9,9 @@ var ArraySet = require("./array-set").ArraySet;
 var ArrayMap = require("./array-map").ArrayMap;
 var StringSet = require("./string-set").StringSet;
 var NumberSet = require("./number-set").NumberSet;
+var RbTreeSearchTarget = require("./rb-tree-search-target").RbTreeSearchTarget;
 var RbTreeSet = require("./rb-tree-set").RbTreeSet;
+var RbTreeMap = require("./rb-tree-map").RbTreeMap;
 var PriorityQueue = require("./priority-queue").PriorityQueue;
 
 module.exports = {
@@ -24,6 +26,8 @@ module.exports = {
     ArrayMap : ArrayMap,
     StringSet : StringSet,
     NumberSet : NumberSet,
+    RbTreeSearchTarget : RbTreeSearchTarget,
     RbTreeSet : RbTreeSet,
+    RbTreeMap : RbTreeMap,
     PriorityQueue : PriorityQueue
 };

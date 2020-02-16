@@ -7,7 +7,7 @@ module.exports = (function ()
     /**
      *  @param {*} obj
      *  @param {string[] | ((key : string) => boolean)} predicate
-     *  @returns {{ [x : string] : any }}
+     *  @returns {Record<string, any>}
      */
     function filterObjectKeys(obj, predicate)
     {

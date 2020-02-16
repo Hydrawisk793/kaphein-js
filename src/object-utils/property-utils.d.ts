@@ -5,7 +5,7 @@ export declare interface PropertyTraversalOption
     throwErrorIfNotFound? : boolean;
 
     defaultValue? : any;
-    
+
     getterArgs? : any[];
 }
 

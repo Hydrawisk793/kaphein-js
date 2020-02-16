@@ -22,11 +22,11 @@ var ArraySet = (function ()
      */
     function ArraySet()
     {
-        /** @type {Iterable<T>} */var iterable = arguments[0];
-        /** @type {EqualComparer<T>} */var comparer = arguments[1];
+        /**  @type {Iterable<T>} */var iterable = arguments[0];
+        /**  @type {EqualComparer<T>} */var comparer = arguments[1];
 
         this._comparer = isCallable(comparer) ? comparer : defaultEqualComparer;
-        /** @type {T[]} */this._elements = null;
+        /**  @type {T[]} */this._elements = null;
         this.clear();
 
         if(isIterable(iterable)) {
@@ -145,7 +145,7 @@ var ArraySet = (function ()
          */
         indexOf : function indexOf(element)
         {
-            /** @type {EqualComparer<typeof element>} */var comparer = isCallable(arguments[1]) ? arguments[1] : this._comparer;
+            /**  @type {EqualComparer<typeof element>} */var comparer = isCallable(arguments[1]) ? arguments[1] : this._comparer;
 
             for(var index = -1, i = 0; index < 0 && i < this._elements.length; ++i) {
                 if(comparer(this._elements[i], element)) {
@@ -235,7 +235,7 @@ var ArraySet = (function ()
 
         clear : function clear()
         {
-            /** @type {T[]} */this._elements = [];
+            /**  @type {T[]} */this._elements = [];
             this.size = 0;
         },
 

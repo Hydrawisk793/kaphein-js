@@ -9,7 +9,7 @@ if(!Reflect) {
          */
         construct : function construct(target, argumentsList)
         {
-            /** @type {Function} */var newTarget = arguments[2];
+            /**  @type {Function} */var newTarget = arguments[2];
 
             return target.apply(
                 Object.create("undefined" === typeof newTarget ? target.prototype : newTarget.prototype),

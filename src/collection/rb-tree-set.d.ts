@@ -1,15 +1,12 @@
 import { Comparer } from "./comparer";
+import { RbTreeSearchTarget } from "./rb-tree-search-target";
 
 export declare namespace RbTreeSet
 {
-    export const enum SearchTarget
-    {
-        less = 0,
-        lessOrEqual = 1,
-        greater = 2,
-        greaterOrEqual = 3,
-        equal = 4,
-    }
+    /**
+     *  @deprecated import 'RbTreeSearchTarget' enum separately.
+     */
+    export type SearchTarget = RbTreeSearchTarget;
 
     export class CppValueIterator<T>
     {
@@ -63,9 +60,17 @@ export declare class RbTreeSet<T> implements Set<T>
 
     public values() : IterableIterator<T>;
 
+    public findValue(
+        value : T,
+        searchTarget : RbTreeSearchTarget
+    ) : T | undefined;
+
+    /**
+     *  @deprecated Use 'findEntry' method with 'RbTreeSearchTarget' enum instead.
+     */
     public find(
         value : T,
-        searchTarget : RbTreeSet.SearchTarget
+        searchTarget : RbTreeSearchTarget
     ) : RbTreeSet.CppValueIterator<T>;
 
     public has(
