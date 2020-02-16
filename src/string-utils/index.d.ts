@@ -6,3 +6,5 @@ export declare function toCamelCase(
     str : string,
     delimiter : string
 ) : string;
+
+export * from "./encoding";

@@ -1,3 +1,5 @@
+var encoding = require("./encoding");
+
 var generateRandomHexString = (function ()
 {
     var hexChars = "0123456789abcdef";
@@ -47,7 +49,10 @@ function toCamelCase(str, delimiter)
     ;
 }
 
-module.exports = {
-    generateRandomHexString : generateRandomHexString,
-    toCamelCase : toCamelCase
-};
+module.exports = Object.assign(
+    {
+        generateRandomHexString : generateRandomHexString,
+        toCamelCase : toCamelCase
+    },
+    encoding
+);

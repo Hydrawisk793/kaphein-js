@@ -62,3 +62,34 @@ if(!String.prototype.endsWith) {
         return s.substr(s.length - other.length, other.length) === other;
     };
 }
+
+if(!String.prototype.padStart) {
+    String.prototype.padStart = (function ()
+    {
+        /**
+         *  @this {string}
+         */
+        function padStart(len)
+        {
+            var ch = "string" === typeof ch ? ch : " ";
+            if(ch.length > 1) {
+                throw new Error("Not implemeted yet.");
+            }
+
+            var str = this;
+            if(len > this.length) {
+                var padLen = len - str.length;
+                var prefix = "";
+                for(var i = 0; i < padLen; ++i) {
+                    prefix += ch;
+                }
+
+                str = prefix + str;
+            }
+
+            return str;
+        }
+
+        return padStart;
+    })();
+}
