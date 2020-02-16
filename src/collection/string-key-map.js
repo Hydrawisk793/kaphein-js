@@ -156,7 +156,7 @@ function StringKeyMap()
  */
 StringKeyMap.wrap = function wrap(src)
 {
-    var map = /** @type {StringKeyMap<T>} */new StringKeyMap();
+    var map = /**  @type {StringKeyMap<T>} */new StringKeyMap();
     map.attach(src);
 
     return map;

@@ -17,9 +17,9 @@ module.exports = (function ()
      */
     function Logger()
     {
-        /** @type {Console|null} */this._console = null;
+        /**  @type {Console|null} */this._console = null;
 
-        /** @type {Console|string|null} */var arg = arguments[0];
+        /**  @type {Console|string|null} */var arg = arguments[0];
         if(isNonNullObject(arg)) {
             this._console = arg;
         }
@@ -27,7 +27,7 @@ module.exports = (function ()
             throw new Error("Logging to file is not implemeted yet.");
         }
 
-        /** @type {Set<LoggerMessageDecorator>} */this._messageDecorators = new _Set();
+        /**  @type {Set<LoggerMessageDecorator>} */this._messageDecorators = new _Set();
     }
 
     Logger.prototype = {

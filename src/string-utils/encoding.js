@@ -39,7 +39,7 @@ module.exports = (function ()
             throw new TypeError("'str' must be a string.");
         }
 
-        /** @type {number[]} */var byteArray = [];
+        /**  @type {number[]} */var byteArray = [];
         for(var i = 0; i < str.length; ++i) {
             var ch = str.charCodeAt(i);
 

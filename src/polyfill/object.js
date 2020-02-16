@@ -130,8 +130,8 @@ if(!Object.entries) {
          */
         function entries(obj)
         {
-            /** @type {keyof T[]} */var keys = Object.keys(obj);
-            /** @type {[keyof T, T[keyof T]][]} */var pairs = [];
+            /**  @type {keyof T[]} */var keys = Object.keys(obj);
+            /**  @type {[keyof T, T[keyof T]][]} */var pairs = [];
             for(var i = 0; i < keys.length; ++i) {
                 var key = keys[i];
                 pairs.push(key, obj[key]);

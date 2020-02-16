@@ -95,7 +95,7 @@ if(!Array.from) {
          *  @param {ArrayLike<T>} arrayLike
          *  @param {Function} [mapFunction]
          *  @param {*} [thisArg]
-         *  @return {T[]}
+         *  @returns {T[]}
          */
         function _arrayFromFunctionBody(arr, traitAssertionFunc, pushBackMethodKey, arrayLike, mapFunction, thisArg)
         {

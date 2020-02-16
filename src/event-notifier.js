@@ -19,7 +19,7 @@ module.exports = (function ()
      */
     function EventNotifier()
     {
-        /** @type {Map<string, Map<Function, HandlerDescriptor>>} */this._handlerMaps = new StringKeyMap();
+        /**  @type {Map<string, Map<Function, HandlerDescriptor>>} */this._handlerMaps = new StringKeyMap();
     }
 
     EventNotifier.prototype = {
@@ -89,7 +89,7 @@ module.exports = (function ()
          */
         notify : function notify(eventName, eventArgs)
         {
-            /** @type {any[]} */var results = [];
+            /**  @type {any[]} */var results = [];
 
             var handlerMap = EventNotifier_getHandlerMap(this, eventName);
             if(null !== handlerMap && handlerMap.size > 0) {
@@ -172,7 +172,7 @@ module.exports = (function ()
             throw new TypeError("'eventName' must be a string.");
         }
 
-        /** @type {Map<Function, HandlerDescriptor> | null} */var handlerMap = null;
+        /**  @type {Map<Function, HandlerDescriptor> | null} */var handlerMap = null;
         if(thisRef._handlerMaps.has(eventName)) {
             handlerMap = thisRef._handlerMaps.get(eventName);
         }

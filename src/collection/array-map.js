@@ -47,7 +47,7 @@ var ArrayMap = (function ()
         var keyEqualComparer = arguments[1];
 
         this._keyEqualComparer = isCallable(keyEqualComparer) ? keyEqualComparer : defaultEqualComparer;
-        /** @type {[K, V][]} */this._pairs = null;
+        /**  @type {[K, V][]} */this._pairs = null;
         this.clear();
 
         if(isIterable(iterable)) {

@@ -25,8 +25,8 @@ var ListQueue = (function ()
      */
     function ListQueue()
     {
-        /** @type {ListNode<T>} */this._head = null;
-        /** @type {ListNode<T>} */this._tail = null;
+        /**  @type {ListNode<T>} */this._head = null;
+        /**  @type {ListNode<T>} */this._tail = null;
         this._elemCount = 0;
     }
 
