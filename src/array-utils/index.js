@@ -10,9 +10,9 @@ module.exports = (function ()
         return arr.findIndex(
             function (arrItem)
             {
-                return itemComparer(item, arrItem) >= 0;
+                return itemComparer(item, arrItem);
             }
-        );
+        ) >= 0;
     }
 
     /**
@@ -46,10 +46,11 @@ module.exports = (function ()
      *  @template T
      *  @param {T[]} prev
      *  @param {T[]} current
-     *  @param {(lhs : T, rhs : T) => boolean} itemComparer
+     *  @param {(lhs : T, rhs : T) => boolean} [itemComparer]
      */
-    function findArrayChanges(prev, current, itemComparer)
+    function findArrayChanges(prev, current)
     {
+        var itemComparer = arguments[2];
         if(!isCallable(itemComparer)) {
             itemComparer = _defaultItemComparer;
         }
