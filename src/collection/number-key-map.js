@@ -33,7 +33,7 @@ module.exports = (function ()
             );
         }
     }
-    
+
     /**
      *  @template T
      *  @param {Record<number, T>} src
@@ -42,7 +42,7 @@ module.exports = (function ()
     {
         var map = /**  @type {NumberKeyMap<T>} */new NumberKeyMap();
         map.attach(src);
-    
+
         return map;
     };
 
@@ -54,87 +54,87 @@ module.exports = (function ()
             this._map = obj;
             this.size = this.getSize();
         },
-        
+
         detach : function detach()
         {
             var old = this._map;
-        
+
             this.clear();
-        
+
             return old;
         },
-        
+
         getSize : function getSize()
         {
             return Object.keys(this._map).length;
         },
-        
+
         clear : function clear()
         {
             this._map = {};
             this.size = 0;
         },
-        
+
         "delete" : function (key)
         {
             var hasKey = this.has(key);
-        
+
             if(hasKey) {
                 delete this._map[key];
                 --this.size;
             }
-        
+
             return hasKey;
         },
-        
+
         entries : function entries()
         {
             return new PairIterator(this._map);
         },
-        
+
         forEach : function forEach(callback)
         {
             var thisArg = arguments[1];
-        
+
             var i, key;
             var keys = Object.keys(this._map);
             for(i = 0; i < keys.length; ++i) {
                 key = Number(keys[i]);
-        
+
                 callback.call(thisArg, this.get(key), key, this);
             }
         },
-        
+
         map : function map(callback)
         {
             var thisArg = arguments[1];
-        
+
             var results = [];
             var i, key;
             var keys = Object.keys(this._map);
             for(i = 0; i < keys.length; ++i) {
                 key = Number(keys[i]);
-        
+
                 results.push(callback.call(thisArg, this.get(key), key, this));
             }
-        
+
             return results;
         },
-        
+
         get : function get(key)
         {
             _assertIsKeyNumber(key);
-        
+
             return this._map[key];
         },
-        
+
         has : function has(key)
         {
             _assertIsKeyNumber(key);
-        
+
             return _hasOwnProperty.call(this._map, key);
         },
-        
+
         keys : function keys()
         {
             return new KeyIterator(this._map);
@@ -143,32 +143,32 @@ module.exports = (function ()
         set : function set(key, value)
         {
             var hasKey = this.has(key);
-        
+
             this._map[key] = value;
             if(!hasKey) {
                 ++this.size;
             }
-        
+
             return this;
         },
-        
+
         values : function values()
         {
             return new ValueIterator(this._map);
         },
-        
+
         toPlainObject : function toPlainObject()
         {
             var i, key;
             var iter = this.keys();
             var plainObject = {};
-        
+
             for(i = iter.next(); !i.done; i = iter.next()) {
                 key = Number(i.value);
-        
+
                 plainObject[key] = this._map[key];
             }
-        
+
             return plainObject;
         }
     };
@@ -229,7 +229,7 @@ module.exports = (function ()
                 result.value = [key, this._map[key]];
                 ++this._keyIndex;
             }
-        
+
             return result;
         }
     };
@@ -252,16 +252,16 @@ module.exports = (function ()
                 value : void 0,
                 done : this._keyIndex >= this._keys.length
             };
-        
+
             if(!result.done) {
                 result.value = Number(this._keys[this._keyIndex]);
                 ++this._keyIndex;
             }
-        
+
             return result;
         }
     };
-    
+
     /**
      *  @constructor
      */
@@ -271,7 +271,7 @@ module.exports = (function ()
         this._keys = Object.keys(this._map);
         this._keyIndex = 0;
     }
-    
+
     ValueIterator.prototype = {
         constructor : ValueIterator,
 
@@ -282,13 +282,13 @@ module.exports = (function ()
                 value : void 0,
                 done : this._keyIndex >= this._keys.length
             };
-        
+
             if(!result.done) {
                 key = this._keys[this._keyIndex];
                 result.value = this._map[key];
                 ++this._keyIndex;
             }
-        
+
             return result;
         }
     };

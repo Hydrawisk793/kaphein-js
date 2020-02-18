@@ -3,37 +3,14 @@ var isIterable = require("../type-trait").isIterable;
 var isCallable = require("../type-trait").isCallable;
 var isSymbolSupported = require("./is-symbol-supported").isSymbolSupported;
 var defaultEqualComparer = require("./detail").defaultEqualComparer;
+var ArrayLikeValueIterator = require("./array-like-iterator").ArrayLikeValueIterator;
 
 module.exports = (function ()
 {
-    var _isSymbolSupported = isSymbolSupported();
-
     /**
      *  @template K
      *  @typedef {import("./equal-comparer").EqualComparer<K>} EqualComparer
      */
-
-    /**
-     *  @template K, V
-     *  @param {Map<K, V>} mapObj
-     *  @param {Iterable<[K, V]>} iterable
-     */
-    function _addRange(mapObj, iterable)
-    {
-        if(!isIterable(iterable)) {
-            throw new TypeError("Parameter 'iterable' must have a property 'Symbol.iterator'.");
-        }
-
-        for(
-            var i = iterable[Symbol.iterator](), iP = i.next();
-            !iP.done;
-            iP = i.next()
-        ) {
-            mapObj.set(iP.value[0], iP.value[1]);
-        }
-
-        return mapObj;
-    }
 
     /**
      *  @template K, V
@@ -83,28 +60,19 @@ module.exports = (function ()
             }
         },
 
-        /**
-         *  @returns {PairIterator<K, V>}
-         */
         entries : function entries()
         {
-            return new PairIterator(this);
+            return new ArrayLikeValueIterator(this._pairs);
         },
 
-        /**
-         *  @returns {KeyIterator<K>}
-         */
         keys : function keys()
         {
-            return new KeyIterator(this);
+            return new PairArrayIterator(this._pairs, 0);
         },
 
-        /**
-         *  @returns {ValueIterator<V>}
-         */
         values : function values()
         {
-            return new ValueIterator(this);
+            return new PairArrayIterator(this._pairs, 1);
         },
 
         /**
@@ -220,124 +188,70 @@ module.exports = (function ()
         }
     };
 
-    if(_isSymbolSupported) {
-        ArrayMap.prototype[Symbol.iterator] = function ()
-        {
-            return new PairIterator(this);
-        };
-
-        ArrayMap.prototype[Symbol.toStringTag] = "ArrayMap";
-    }
-
     /**
      *  @template K, V
-     *  @param {ArrayMap<K, V>} arrayMap
+     *  @param {[K, V][]} pairs
+     *  @param {number} pairIndex
      *  @param {number} [index = 0]
      */
-    function PairIterator(arrayMap)
+    function PairArrayIterator(pairs, pairIndex)
     {
-        this._arrayMap = arrayMap;
-        this._index = isUndefined(arguments[1]) ? 0 : arguments[1];
+        this._pairs = pairs;
+        this._pairIndex = pairIndex
+        this._index = isUndefined(arguments[2]) ? 0 : arguments[2];
     }
 
     /**
-     *  @returns {IteratorReturnResult<[K, V]>}
+     *  @returns {IteratorReturnResult<K> | IteratorReturnResult<V>}
      */
-    PairIterator.prototype.next = function ()
-    {
-        var result = {
-            done : this._index >= this._arrayMap._pairs.length,
-            value : void 0
-        };
-
-        if(!result.done) {
-            result.value = this._arrayMap._pairs[this._index].slice();
-
-            ++this._index;
-        }
-
-        return result;
-    };
-
-    if(_isSymbolSupported) {
-        PairIterator.prototype[Symbol.iterator] = function ()
-        {
-            return this;
-        };
-    }
-
-    /**
-     *  @template K, V
-     *  @param {ArrayMap<K, V>} arrayMap
-     *  @param {number} [index = 0]
-     */
-    function KeyIterator(arrayMap)
-    {
-        this._arrayMap = arrayMap;
-        this._index = isUndefined(arguments[1]) ? 0 : arguments[1];
-    }
-
-    /**
-     *  @returns {IteratorReturnResult<K>}
-     */
-    KeyIterator.prototype.next = function ()
-    {
-        var result = {
-            done : this._index >= this._arrayMap._pairs.length,
-            value : void 0
-        };
-
-        if(!result.done) {
-            result.value = this._arrayMap._pairs[this._index][0];
-
-            ++this._index;
-        }
-
-        return result;
-    };
-
-    if(_isSymbolSupported) {
-        KeyIterator.prototype[Symbol.iterator] = function ()
-        {
-            return this;
-        };
-    }
-
-    /**
-     *  @template K, V
-     *  @param {ArrayMap<K, V>} arrayMap
-     *  @param {number} [index = 0]
-     */
-    function ValueIterator(arrayMap)
-    {
-        this._arrayMap = arrayMap;
-        this._index = isUndefined(arguments[1]) ? 0 : arguments[1];
-    }
-
-    /**
-     *  @returns {IteratorReturnResult<V>}
-     */
-    ValueIterator.prototype.next = function ()
+    PairArrayIterator.prototype.next = function ()
     {
         var out = {
-            done : this._index >= this._arrayMap._pairs.length,
+            done : this._index >= this._pairs.length,
             value : void 0
         };
 
         if(!out.done) {
-            out.value = this._arrayMap._pairs[this._index][1];
-
+            out.value = this._pairs[this._index][this._pairIndex];
             ++this._index;
         }
 
         return out;
     };
 
-    if(_isSymbolSupported) {
-        ValueIterator.prototype[Symbol.iterator] = function ()
+    if(isSymbolSupported()) {
+        ArrayMap.prototype[Symbol.iterator] = ArrayMap.prototype.entries;
+
+        ArrayMap.prototype[Symbol.toStringTag] = "ArrayMap";
+
+        var returnThis = function ()
         {
             return this;
         };
+
+        PairArrayIterator.prototype[Symbol.iterator] = returnThis;
+    }
+
+    /**
+     *  @template K, V
+     *  @param {Map<K, V>} mapObj
+     *  @param {Iterable<[K, V]>} iterable
+     */
+    function _addRange(mapObj, iterable)
+    {
+        if(!isIterable(iterable)) {
+            throw new TypeError("Parameter 'iterable' must have a property 'Symbol.iterator'.");
+        }
+
+        for(
+            var i = iterable[Symbol.iterator](), iP = i.next();
+            !iP.done;
+            iP = i.next()
+        ) {
+            mapObj.set(iP.value[0], iP.value[1]);
+        }
+
+        return mapObj;
     }
 
     return {

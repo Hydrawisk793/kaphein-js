@@ -33,7 +33,7 @@ module.exports = (function ()
             );
         }
     }
-    
+
     /**
      *  @template T
      *  @param {Record<string, T>} src
@@ -42,60 +42,60 @@ module.exports = (function ()
     {
         var map = /**  @type {StringKeyMap<T>} */new StringKeyMap();
         map.attach(src);
-    
+
         return map;
     };
 
     StringKeyMap.prototype = {
         constructor : StringKeyMap,
-    
+
         attach : function attach(obj)
         {
             this._map = obj;
             this.size = this.getSize();
         },
-        
+
         detach : function detach()
         {
             var old = this._map;
-        
+
             this.clear();
-        
+
             return old;
         },
-        
+
         getSize : function getSize()
         {
             return Object.keys(this._map).length;
         },
-        
+
         clear : function clear()
         {
             this._map = {};
             this.size = 0;
         },
-        
+
         "delete" : function (key)
         {
             var hasKey = this.has(key);
-        
+
             if(hasKey) {
                 delete this._map[key];
                 --this.size;
             }
-        
+
             return hasKey;
         },
-        
+
         entries : function entries()
         {
             return new PairIterator(this._map);
         },
-        
+
         forEach : function forEach(callback)
         {
             var thisArg = arguments[1];
-        
+
             var i, key;
             var keys = Object.keys(this._map);
             for(i = 0; i < keys.length; ++i) {
@@ -104,90 +104,90 @@ module.exports = (function ()
                 callback.call(thisArg, this.get(key), key, this);
             }
         },
-        
+
         map : function map(callback)
         {
             var thisArg = arguments[1];
-        
+
             var results = [];
             var i, key;
             var keys = Object.keys(this._map);
             for(i = 0; i < keys.length; ++i) {
                 key = keys[i];
-        
+
                 results.push(callback.call(thisArg, this.get(key), key, this));
             }
-        
+
             return results;
         },
-        
+
         get : function get(key)
         {
             _assertIsKeyString(key);
-        
+
             return this._map[key];
         },
-        
+
         has : function has(key)
         {
             _assertIsKeyString(key);
-        
+
             return _hasOwnProperty.call(this._map, key);
         },
-        
+
         keys : function keys()
         {
             return new KeyIterator(this._map);
         },
-        
+
         set : function set(key, value)
         {
             var hasKey = this.has(key);
-        
+
             this._map[key] = value;
             if(!hasKey) {
                 ++this.size;
             }
-        
+
             return this;
         },
-        
+
         values : function values()
         {
             return new ValueIterator(this._map);
         },
-        
+
         toPlainObject : function toPlainObject()
         {
             var i, key;
             var iter = this.keys();
             var plainObject = {};
-        
+
             for(i = iter.next(); !i.done; i = iter.next()) {
                 key = i.value
-        
+
                 plainObject[key] = this._map[key];
             }
-        
+
             return plainObject;
         }
     };
-    
+
     if(isSymbolSupported()) {
         StringKeyMap.prototype[Symbol.iterator] = StringKeyMap.prototype.entries;
-    
+
         StringKeyMap.prototype[Symbol.toStringTag] = "StringKeyMap";
-    
+
         PairIterator.prototype[Symbol.iterator] = function ()
         {
             return this;
         };
-    
+
         KeyIterator.prototype[Symbol.iterator] = function ()
         {
             return this;
         };
-    
+
         ValueIterator.prototype[Symbol.iterator] = function ()
         {
             return this;
@@ -212,7 +212,7 @@ module.exports = (function ()
         this._keys = Object.keys(this._map);
         this._keyIndex = 0;
     }
-    
+
     PairIterator.prototype = {
         constructor : PairIterator,
 
@@ -229,11 +229,11 @@ module.exports = (function ()
                 result.value = [key, this._map[key]];
                 ++this._keyIndex;
             }
-        
+
             return result;
         }
     };
-    
+
     /**
      *  @constructor
      */
@@ -242,7 +242,7 @@ module.exports = (function ()
         this._keys = Object.keys(map);
         this._keyIndex = 0;
     }
-    
+
     KeyIterator.prototype = {
         constructor : KeyIterator,
 
@@ -252,16 +252,16 @@ module.exports = (function ()
                 value : void 0,
                 done : this._keyIndex >= this._keys.length
             };
-        
+
             if(!result.done) {
                 result.value = "" + this._keys[this._keyIndex];
                 ++this._keyIndex;
             }
-        
+
             return result;
         }
     };
-    
+
     /**
      *  @constructor
      */
@@ -282,13 +282,13 @@ module.exports = (function ()
                 value : void 0,
                 done : this._keyIndex >= this._keys.length
             };
-        
+
             if(!result.done) {
                 key = this._keys[this._keyIndex];
                 result.value = this._map[key];
                 ++this._keyIndex;
             }
-        
+
             return result;
         }
     };
