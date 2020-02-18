@@ -2,12 +2,20 @@ import { EqualComparer } from "./equal-comparer";
 
 export declare class ArrayMap<K, V> implements Map<K, V>
 {
+    public static wrap<K, V>(
+        src : [K, V][]
+    ) : ArrayMap<K, V>;
+
     public constructor(
         iterable? : Iterable<[K, V]>,
         keyEqualComparer? : EqualComparer<K>
     );
 
-    public [Symbol.toStringTag] : string;
+    public attach(
+        arr : [K, V][]
+    ) : void;
+
+    public detach() : [K, V][];
 
     public readonly size : number;
 
@@ -71,4 +79,6 @@ export declare class ArrayMap<K, V> implements Map<K, V>
     public clear() : void;
 
     public toArray() : [K, V][];
+    
+    public [Symbol.toStringTag] : string;
 }

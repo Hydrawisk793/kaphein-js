@@ -1,4 +1,5 @@
 var isUndefined = require("../type-trait").isUndefined;
+var isArray = require("../type-trait").isArray;
 var isIterable = require("../type-trait").isIterable;
 var isCallable = require("../type-trait").isCallable;
 var isSymbolSupported = require("./is-symbol-supported").isSymbolSupported;
@@ -34,8 +35,42 @@ module.exports = (function ()
         }
     }
 
+    /**
+     *  @template K, V
+     *  @param {[K, V][]} src
+     */
+    ArrayMap.wrap = function wrap(src)
+    {
+        /** @type {ArrayMap<K, V>} */var map = new ArrayMap();
+        map.attach(src);
+
+        return map;
+    };
+
     ArrayMap.prototype = {
         constructor : ArrayMap,
+
+        /**
+         *  @param {[K, V][]} arr
+         */
+        attach : function attach(arr)
+        {
+            if(!isArray(arr)) {
+                throw new TypeError("'arr' must be an array.");
+            }
+
+            this._elements = arr;
+            this.size = arr.length;
+        },
+
+        detach : function detach()
+        {
+            var arr = this._elements;
+
+            this.clear();
+
+            return arr;
+        },
 
         size : 0,
 

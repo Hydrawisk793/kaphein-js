@@ -1,3 +1,4 @@
+var isArray = require("../type-trait").isArray;
 var isIterable = require("../type-trait").isIterable;
 var isCallable = require("../type-trait").isCallable;
 var isSymbolSupported = require("./is-symbol-supported").isSymbolSupported;
@@ -9,8 +10,6 @@ var ArrayLikeValueIterator = require("./array-like-iterator").ArrayLikeValueIter
 
 module.exports = (function ()
 {
-    var _isSymbolSupported = isSymbolSupported();
-
     /**
      *  @template T
      *  @typedef {import("./equal-comparer").EqualComparer<T>} EqualComparer<T>
@@ -37,17 +36,27 @@ module.exports = (function ()
         }
     }
 
+    /**
+     *  @template T
+     *  @param {T[]} src
+     */
+    ArraySet.wrap = function wrap(src)
+    {
+        /** @type {ArraySet<T>} */var set = new ArraySet();
+        set.attach(src);
+
+        return set;
+    };
+
     ArraySet.prototype = {
         constructor : ArraySet,
-
-        size : 0,
 
         /**
          *  @param {T[]} arr
          */
         attach : function attach(arr)
         {
-            if(!Array.isArray(arr)) {
+            if(!isArray(arr)) {
                 throw new TypeError("'arr' must be an array.");
             }
 
@@ -63,6 +72,8 @@ module.exports = (function ()
 
             return arr;
         },
+
+        size : 0,
 
         /**
          *  @returns {number}
@@ -260,7 +271,7 @@ module.exports = (function ()
         }
     };
 
-    if(_isSymbolSupported) {
+    if(isSymbolSupported()) {
         ArraySet.prototype[Symbol.iterator] = ArraySet.prototype.values;
 
         ArraySet.prototype[Symbol.toStringTag] = "ArraySet";
