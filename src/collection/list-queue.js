@@ -3,22 +3,8 @@ var isFunction = require("../type-trait").isFunction;
 var isIterable = require("../type-trait").isIterable;
 var isSymbolSupported = require("./is-symbol-supported").isSymbolSupported;
 
-var ListQueue = (function ()
+module.exports = (function ()
 {
-    /**
-     *  @template T
-     *  @constructor
-     *  @param {T} element
-     *  @param {ListNode<T>} next
-     */
-    function ListNode(element, next)
-    {
-        this.element = element;
-        this.next = next;
-    }
-
-    ListNode.prototype.constructor = ListNode;
-
     /**
      *  @template T
      *  @constructor
@@ -224,10 +210,23 @@ var ListQueue = (function ()
         };
     }
 
-    return ListQueue;
+    /**
+     *  @template T
+     *  @constructor
+     *  @param {T} element
+     *  @param {ListNode<T>} next
+     */
+    function ListNode(element, next)
+    {
+        this.element = element;
+        this.next = next;
+    }
+
+    ListNode.prototype = {
+        constructor : ListNode
+    };
+
+    return {
+        ListQueue : ListQueue
+    };
 })();
-
-
-module.exports = {
-    ListQueue : ListQueue
-};

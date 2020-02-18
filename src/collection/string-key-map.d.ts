@@ -82,7 +82,5 @@ export declare class StringKeyMap<V> implements Map<string, V>
         value : V
     ) : this;
 
-    public toString() : string;
-
     public toPlainObject() : { [key : string] : V };
 }

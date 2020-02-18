@@ -4,7 +4,7 @@ var isCallable = require("../type-trait").isCallable;
 var isSymbolSupported = require("./is-symbol-supported").isSymbolSupported;
 var defaultEqualComparer = require("./detail").defaultEqualComparer;
 
-var ArrayMap = (function ()
+module.exports = (function ()
 {
     var _isSymbolSupported = isSymbolSupported();
 
@@ -340,9 +340,7 @@ var ArrayMap = (function ()
         };
     }
 
-    return ArrayMap;
+    return {
+        ArrayMap : ArrayMap
+    };
 })();
-
-module.exports = {
-    ArrayMap : ArrayMap
-};

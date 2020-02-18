@@ -1,6 +1,6 @@
 var isSymbolSupported = require("./is-symbol-supported").isSymbolSupported;
 
-var ArrayQueue = (function ()
+module.exports = (function ()
 {
     /**
      *  @template T
@@ -8,6 +8,9 @@ var ArrayQueue = (function ()
      */
     function ArrayQueue()
     {
+        /** @type {T[]} */this._elements = [];
+        this.size = 0;
+
         this.clear();
     }
 
@@ -98,9 +101,7 @@ var ArrayQueue = (function ()
         };
     }
 
-    return ArrayQueue;
+    return {
+        ArrayQueue : ArrayQueue
+    };
 })();
-
-module.exports = {
-    ArrayQueue : ArrayQueue
-};

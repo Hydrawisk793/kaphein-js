@@ -1,325 +1,299 @@
-var isUndefinedOrNull = require("../type-trait").isUndefinedOrNull;
 var isIterable = require("../type-trait").isIterable;
 var isNumber = require("../type-trait").isNumber;
 var isSymbolSupported = require("./is-symbol-supported").isSymbolSupported;
 
-var _hasOwnProperty = Object.prototype.hasOwnProperty;
-
-function _assertIsKeyNumber(key)
+module.exports = (function ()
 {
-    if(!isNumber(key)) {
-        throw new TypeError("Only number keys are supported.");
-    }
-}
+    /**
+     *  @template T
+     *  @constructor
+     */
+    function NumberKeyMap()
+    {
+        /** @type {Record<number, T>} */this._map = null;
+        this.size = 0;
 
-var toStringTag = "NumberKeyMap";
+        this.clear();
 
-function PairIterator(map)
-{
-    this._map = map;
-    this._keys = Object.keys(this._map);
-    this._keyIndex = 0;
-}
-
-PairIterator.prototype.constructor = PairIterator;
-
-PairIterator.prototype.next = function ()
-{
-    var key;
-    var result = {
-        value : void 0,
-        done : this._keyIndex >= this._keys.length
-    };
-
-    if(!result.done) {
-        key = Number(this._keys[this._keyIndex]);
-        result.value = [key, this._map[key]];
-        ++this._keyIndex;
-    }
-
-    return result;
-};
-
-function KeyIterator(map)
-{
-    this._keys = Object.keys(map);
-    this._keyIndex = 0;
-}
-
-KeyIterator.prototype.constructor = KeyIterator;
-
-KeyIterator.prototype.next = function ()
-{
-    var result = {
-        value : void 0,
-        done : this._keyIndex >= this._keys.length
-    };
-
-    if(!result.done) {
-        result.value = Number(this._keys[this._keyIndex]);
-        ++this._keyIndex;
-    }
-
-    return result;
-};
-
-function ValueIterator(map)
-{
-    this._map = map;
-    this._keys = Object.keys(this._map);
-    this._keyIndex = 0;
-}
-
-ValueIterator.prototype.constructor = ValueIterator;
-
-ValueIterator.prototype.next = function ()
-{
-    var key;
-    var result = {
-        value : void 0,
-        done : this._keyIndex >= this._keys.length
-    };
-
-    if(!result.done) {
-        key = this._keys[this._keyIndex];
-        result.value = this._map[key];
-        ++this._keyIndex;
-    }
-
-    return result;
-};
-
-/**
- *  @constructor
- */
-function NumberKeyMap()
-{
-    var i;
-    var pair;
-    var keys, key;
-    var arg;
-
-    this.clear();
-
-    arg = arguments[0];
-
-    if(arg instanceof NumberKeyMap) {
-        arg.forEach(
-            function (value, key)
-            {
-                this.set(key, value);
-            },
-            this
-        );
-    }
-    else if(Array.isArray(arg)) {
-        for(i = 0; i < arg.length; ++i) {
-            pair = arg[i];
-
-            if(Array.isArray(pair) && pair.length >= 2) {
-                key = pair[0];
-                _assertIsKeyNumber(key);
-
-                this.set(key, pair[1]);
-            }
-        }
-    }
-    else if(!isUndefinedOrNull(arg)) {
-        if(isIterable(arg)) {
-            Array.from(arg).forEach(
-                function (value, key)
+        /** @type {Iterable<[number, T]>} */var iterable = arguments[0];
+        if(isIterable(iterable)) {
+            Array.from(iterable).forEach(
+                /**
+                 *  @this {NumberKeyMap<T>}
+                 */
+                function (pair)
                 {
+                    var key = pair[0];
+
                     _assertIsKeyNumber(key);
 
-                    this.set(key, value);
+                    this.set(key, pair[1]);
                 },
                 this
             );
         }
-        else {
-            keys = Object.keys(arg);
+    }
+    
+    /**
+     *  @template T
+     *  @param {Record<number, T>} src
+     */
+    NumberKeyMap.wrap = function wrap(src)
+    {
+        var map = /**  @type {NumberKeyMap<T>} */new NumberKeyMap();
+        map.attach(src);
+    
+        return map;
+    };
 
+    NumberKeyMap.prototype = {
+        constructor : NumberKeyMap,
+
+        attach : function attach(obj)
+        {
+            this._map = obj;
+            this.size = this.getSize();
+        },
+        
+        detach : function detach()
+        {
+            var old = this._map;
+        
+            this.clear();
+        
+            return old;
+        },
+        
+        getSize : function getSize()
+        {
+            return Object.keys(this._map).length;
+        },
+        
+        clear : function clear()
+        {
+            this._map = {};
+            this.size = 0;
+        },
+        
+        "delete" : function (key)
+        {
+            var hasKey = this.has(key);
+        
+            if(hasKey) {
+                delete this._map[key];
+                --this.size;
+            }
+        
+            return hasKey;
+        },
+        
+        entries : function entries()
+        {
+            return new PairIterator(this._map);
+        },
+        
+        forEach : function forEach(callback)
+        {
+            var thisArg = arguments[1];
+        
+            var i, key;
+            var keys = Object.keys(this._map);
             for(i = 0; i < keys.length; ++i) {
                 key = Number(keys[i]);
-                _assertIsKeyNumber(key);
-
-                this.set(key, arg[key]);
+        
+                callback.call(thisArg, this.get(key), key, this);
             }
+        },
+        
+        map : function map(callback)
+        {
+            var thisArg = arguments[1];
+        
+            var results = [];
+            var i, key;
+            var keys = Object.keys(this._map);
+            for(i = 0; i < keys.length; ++i) {
+                key = Number(keys[i]);
+        
+                results.push(callback.call(thisArg, this.get(key), key, this));
+            }
+        
+            return results;
+        },
+        
+        get : function get(key)
+        {
+            _assertIsKeyNumber(key);
+        
+            return this._map[key];
+        },
+        
+        has : function has(key)
+        {
+            _assertIsKeyNumber(key);
+        
+            return _hasOwnProperty.call(this._map, key);
+        },
+        
+        keys : function keys()
+        {
+            return new KeyIterator(this._map);
+        },
+
+        set : function set(key, value)
+        {
+            var hasKey = this.has(key);
+        
+            this._map[key] = value;
+            if(!hasKey) {
+                ++this.size;
+            }
+        
+            return this;
+        },
+        
+        values : function values()
+        {
+            return new ValueIterator(this._map);
+        },
+        
+        toPlainObject : function toPlainObject()
+        {
+            var i, key;
+            var iter = this.keys();
+            var plainObject = {};
+        
+            for(i = iter.next(); !i.done; i = iter.next()) {
+                key = Number(i.value);
+        
+                plainObject[key] = this._map[key];
+            }
+        
+            return plainObject;
+        }
+    };
+
+    if(isSymbolSupported()) {
+        NumberKeyMap.prototype[Symbol.iterator] = NumberKeyMap.prototype.entries;
+
+        NumberKeyMap.prototype[Symbol.toStringTag] = "NumberKeyMap";
+
+        PairIterator.prototype[Symbol.iterator] = function ()
+        {
+            return this;
+        };
+
+        KeyIterator.prototype[Symbol.iterator] = function ()
+        {
+            return this;
+        };
+
+        ValueIterator.prototype[Symbol.iterator] = function ()
+        {
+            return this;
+        };
+    }
+
+    var _hasOwnProperty = Object.prototype.hasOwnProperty;
+
+    function _assertIsKeyNumber(key)
+    {
+        if(!isNumber(key)) {
+            throw new TypeError("Only number keys are supported.");
         }
     }
 
-    this.size = Object.keys(this._map).length;
-}
-
-/**
- *  @template T
- *  @param {Record<number, T>} src
- */
-NumberKeyMap.wrap = function wrap(src)
-{
-    var map = /**  @type {NumberKeyMap<T>} */new NumberKeyMap();
-    map.attach(src);
-
-    return map;
-};
-
-NumberKeyMap.prototype.constructor = NumberKeyMap;
-
-NumberKeyMap.PairIterator = PairIterator;
-
-NumberKeyMap.KeyIterator = KeyIterator;
-
-NumberKeyMap.ValueIterator = ValueIterator;
-
-NumberKeyMap.prototype.attach = function (obj)
-{
-    this._map = obj;
-    this.size = this.getSize();
-};
-
-NumberKeyMap.prototype.detach = function ()
-{
-    var old = this._map;
-
-    this.clear();
-
-    return old;
-};
-
-NumberKeyMap.prototype.getSize = function ()
-{
-    return Object.keys(this._map).length;
-};
-
-NumberKeyMap.prototype.clear = function ()
-{
-    this._map = {};
-    this.size = 0;
-};
-
-NumberKeyMap.prototype["delete"] = function (key)
-{
-    var hasKey = this.has(key);
-
-    if(hasKey) {
-        delete this._map[key];
-        --this.size;
-    }
-
-    return hasKey;
-};
-
-NumberKeyMap.prototype.entries = function ()
-{
-    return new PairIterator(this._map);
-};
-
-NumberKeyMap.prototype.forEach = function (callback)
-{
-    callback = callback.bind(arguments[1]);
-
-    var i, key;
-    var keys = Object.keys(this._map);
-    for(i = 0; i < keys.length; ++i) {
-        key = Number(keys[i]);
-
-        callback(this["get"](key), key, this);
-    }
-};
-
-NumberKeyMap.prototype.map = function (callback)
-{
-    callback = callback.bind(arguments[1]);
-
-    var results = [];
-    var i, key;
-    var keys = Object.keys(this._map);
-    for(i = 0; i < keys.length; ++i) {
-        key = Number(keys[i]);
-
-        results.push(callback(this["get"](key), key, this));
-    }
-
-    return results;
-};
-
-NumberKeyMap.prototype["get"] = function (key)
-{
-    _assertIsKeyNumber(key);
-
-    return this._map[key];
-};
-
-NumberKeyMap.prototype.has = function (key)
-{
-    _assertIsKeyNumber(key);
-
-    return _hasOwnProperty.call(this._map, key);
-};
-
-NumberKeyMap.prototype.keys = function ()
-{
-    return new KeyIterator(this._map);
-};
-
-NumberKeyMap.prototype["set"] = function (key, value)
-{
-    var hasKey = this.has(key);
-
-    this._map[key] = value;
-    if(!hasKey) {
-        ++this.size;
-    }
-
-    return this;
-};
-
-NumberKeyMap.prototype.values = function ()
-{
-    return new ValueIterator(this._map);
-};
-
-NumberKeyMap.prototype.toPlainObject = function ()
-{
-    var i, key;
-    var iter = this.keys();
-    var plainObject = {};
-
-    for(i = iter.next(); !i.done; i = iter.next()) {
-        key = Number(i.value);
-
-        plainObject[key] = this._map[key];
-    }
-
-    return plainObject;
-};
-
-NumberKeyMap.prototype.toString = function ()
-{
-    return "[object " + toStringTag + "]";
-};
-
-if(isSymbolSupported()) {
-    NumberKeyMap.prototype[Symbol.iterator] = NumberKeyMap.prototype.entries;
-
-    NumberKeyMap.prototype[Symbol.toStringTag] = toStringTag;
-
-    PairIterator.prototype[Symbol.iterator] = function ()
+    /**
+     *  @constructor
+     */
+    function PairIterator(map)
     {
-        return this;
+        this._map = map;
+        this._keys = Object.keys(this._map);
+        this._keyIndex = 0;
+    }
+
+    PairIterator.prototype = {
+        constructor : PairIterator,
+
+        next : function next()
+        {
+            var key;
+            var result = {
+                value : void 0,
+                done : this._keyIndex >= this._keys.length
+            };
+
+            if(!result.done) {
+                key = Number(this._keys[this._keyIndex]);
+                result.value = [key, this._map[key]];
+                ++this._keyIndex;
+            }
+        
+            return result;
+        }
     };
 
-    KeyIterator.prototype[Symbol.iterator] = function ()
+    /**
+     *  @constructor
+     */
+    function KeyIterator(map)
     {
-        return this;
+        this._keys = Object.keys(map);
+        this._keyIndex = 0;
+    }
+
+    KeyIterator.prototype = {
+        constructor : KeyIterator,
+
+        next : function next()
+        {
+            var result = {
+                value : void 0,
+                done : this._keyIndex >= this._keys.length
+            };
+        
+            if(!result.done) {
+                result.value = Number(this._keys[this._keyIndex]);
+                ++this._keyIndex;
+            }
+        
+            return result;
+        }
+    };
+    
+    /**
+     *  @constructor
+     */
+    function ValueIterator(map)
+    {
+        this._map = map;
+        this._keys = Object.keys(this._map);
+        this._keyIndex = 0;
+    }
+    
+    ValueIterator.prototype = {
+        constructor : ValueIterator,
+
+        next : function next()
+        {
+            var key;
+            var result = {
+                value : void 0,
+                done : this._keyIndex >= this._keys.length
+            };
+        
+            if(!result.done) {
+                key = this._keys[this._keyIndex];
+                result.value = this._map[key];
+                ++this._keyIndex;
+            }
+        
+            return result;
+        }
     };
 
-    ValueIterator.prototype[Symbol.iterator] = function ()
-    {
-        return this;
+    return {
+        NumberKeyMap : NumberKeyMap
     };
-}
-
-module.exports = {
-    NumberKeyMap : NumberKeyMap
-};
+})();

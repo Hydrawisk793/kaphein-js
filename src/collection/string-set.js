@@ -2,7 +2,7 @@ var isUndefinedOrNull = require("../type-trait").isUndefinedOrNull;
 var isIterable = require("../type-trait").isIterable;
 var isSymbolSupported = require("./is-symbol-supported").isSymbolSupported;
 
-var StringSet = (function ()
+module.exports = (function ()
 {
     var _hasOwnProperty = Object.prototype.hasOwnProperty;
     var _isSymbolSupported = isSymbolSupported();
@@ -179,9 +179,7 @@ var StringSet = (function ()
         StringSet.prototype[Symbol.toStringTag] = "StringSet";
     }
 
-    return StringSet;
+    return {
+        StringSet : StringSet
+    };
 })();
-
-module.exports = {
-    StringSet : StringSet
-};

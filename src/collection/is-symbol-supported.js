@@ -1,8 +1,11 @@
-function isSymbolSupported()
+module.exports = (function ()
 {
-    return Symbol && "function" === typeof Symbol;
-}
+    function isSymbolSupported()
+    {
+        return Symbol && "function" === typeof Symbol;
+    }
 
-module.exports = {
-    isSymbolSupported : isSymbolSupported
-};
+    return {
+        isSymbolSupported : isSymbolSupported
+    };
+})();

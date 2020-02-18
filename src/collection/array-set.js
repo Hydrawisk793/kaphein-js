@@ -5,7 +5,7 @@ var isSymbolSupported = require("./is-symbol-supported").isSymbolSupported;
 var setAppend = require("./set-extensions").append;
 var defaultEqualComparer = require("./detail").defaultEqualComparer;
 
-var ArraySet = (function ()
+module.exports = (function ()
 {
     var _isSymbolSupported = isSymbolSupported();
 
@@ -348,9 +348,7 @@ var ArraySet = (function ()
         };
     }
 
-    return ArraySet;
+    return {
+        ArraySet : ArraySet
+    };
 })();
-
-module.exports = {
-    ArraySet : ArraySet
-};

@@ -4,7 +4,7 @@ var isFunction = require("../type-trait").isFunction;
 var isSymbolSupported = require("./is-symbol-supported").isSymbolSupported;
 var RbTreeSearchTarget = require("./rb-tree-search-target").RbTreeSearchTarget;
 
-var RbTreeSet = (function ()
+module.exports = (function ()
 {
     var _isSymbolSupported = isSymbolSupported();
 
@@ -1280,9 +1280,7 @@ var RbTreeSet = (function ()
         };
     }
 
-    return RbTreeSet;
+    return {
+        RbTreeSet : RbTreeSet
+    };
 })();
-
-module.exports = {
-    RbTreeSet : RbTreeSet
-};
