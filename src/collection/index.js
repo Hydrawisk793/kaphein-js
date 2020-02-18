@@ -3,6 +3,9 @@ var append = require("./set-extensions").append;
 var difference = require("./set-extensions").difference;
 var exclude = require("./set-extensions").exclude;
 var intersection = require("./set-extensions").intersection;
+var ArrayLikePairIterator = require("./array-like-iterator").ArrayLikePairIterator;
+var ArrayLikeKeyIterator = require("./array-like-iterator").ArrayLikeKeyIterator;
+var ArrayLikeValueIterator = require("./array-like-iterator").ArrayLikeValueIterator;
 var StringKeyMap = require("./string-key-map").StringKeyMap;
 var NumberKeyMap = require("./number-key-map").NumberKeyMap;
 var ArraySet = require("./array-set").ArraySet;
@@ -20,6 +23,9 @@ module.exports = {
     difference : difference,
     exclude : exclude,
     intersection : intersection,
+    ArrayLikePairIterator : ArrayLikePairIterator,
+    ArrayLikeKeyIterator : ArrayLikeKeyIterator,
+    ArrayLikeValueIterator : ArrayLikeValueIterator,
     StringKeyMap : StringKeyMap,
     NumberKeyMap : NumberKeyMap,
     ArraySet : ArraySet,

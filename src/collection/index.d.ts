@@ -3,6 +3,7 @@ export * from "./equal-comparer";
 
 export * from "./utils";
 export * from "./set-extensions";
+export * from "./array-like-iterator";
 export * from "./string-key-map";
 export * from "./number-key-map";
 export * from "./array-set";
