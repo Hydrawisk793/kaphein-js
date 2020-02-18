@@ -1,4 +1,9 @@
+var isIterable = require("../type-trait").isIterable;
+var forOf = require("./utils").forOf;
 var isSymbolSupported = require("./is-symbol-supported").isSymbolSupported;
+var ArrayLikePairIterator = require("./array-like-iterator").ArrayLikePairIterator;
+var ArrayLikeKeyIterator = require("./array-like-iterator").ArrayLikeKeyIterator;
+var ArrayLikeValueIterator = require("./array-like-iterator").ArrayLikeValueIterator;
 
 module.exports = (function ()
 {
@@ -12,17 +17,46 @@ module.exports = (function ()
         this.size = 0;
 
         this.clear();
+
+        var iterable = arguments[0];
+        if(isIterable(iterable)) {
+            forOf(
+                iterable,
+                /**
+                 *  @this {ArrayQueue<T>}
+                 */
+                function (value)
+                {
+                    this.enqueue(value);
+                },
+                this
+            );
+        }
     }
 
-    /**
-     *  @template T
-     */
     ArrayQueue.prototype = {
         constructor : ArrayQueue,
 
+        size : 0,
+
         entries : function entries()
         {
-            return new PairIterator(this._elements);
+            return new ArrayLikePairIterator(this._elements);
+        },
+
+        keys : function keys()
+        {
+            return new ArrayLikeKeyIterator(this._elements);
+        },
+
+        values : function values()
+        {
+            return new ArrayLikeValueIterator(this._elements);
+        },
+
+        isEmpty : function isEmpty()
+        {
+            return this.size < 1;
         },
 
         /**
@@ -30,22 +64,23 @@ module.exports = (function ()
          */
         enqueue : function enqueue(v)
         {
-            this._elements.splice(this._elements.length, 0, v);
+            this._elements.push(v);
             ++this.size;
         },
 
+        /**
+         *  @returns {T | undefined}
+         */
         dequeue : function dequeue()
         {
-            var elem;
+            var elem = void 0;
 
-            if(this.size < 1) {
-                throw new Error("");
+            if(!this.isEmpty()) {
+                elem = this._elements.shift();
+                --this.size;
             }
 
-            elem = this._elements.splice(0, 1);
-            --this.size;
-
-            return elem[0];
+            return elem;
         },
 
         clear : function clear()
@@ -56,49 +91,9 @@ module.exports = (function ()
     };
 
     if(isSymbolSupported()) {
-        ArrayQueue.prototype[Symbol.iterator] = ArrayQueue.prototype.entries;
+        ArrayQueue.prototype[Symbol.iterator] = ArrayQueue.prototype.values;
 
         ArrayQueue.prototype[Symbol.toStringTag] = "ArrayQueue";
-    }
-
-    /**
-     *  @template T
-     *  @constructor
-     *  @param {T[]} arr
-     */
-    function PairIterator(arr)
-    {
-        this._elements = arr.slice();
-        this._index = 0;
-    }
-
-    /**
-     *  @template T
-     */
-    PairIterator.prototype = {
-        constructor : PairIterator,
-
-        next : function next()
-        {
-            var result = {
-                /**  @type {[number, T]} */value : void 0,
-                done : this._index >= this._elements.length
-            };
-
-            if(!result.done) {
-                result.value = [this._index, this._elements[this._index]];
-                ++this._index;
-            }
-
-            return result;
-        }
-    };
-
-    if(isSymbolSupported()) {
-        PairIterator.prototype[Symbol.iterator] = function ()
-        {
-            return this;
-        };
     }
 
     return {
