@@ -9,9 +9,9 @@
     "dist"
   ],
   "scripts": {
-    "build": "rm -rf dist && npm test && webpack --mode=production --config webpack.config.js",
-    "test": "eslint src && eslint src -c src/.eslintrc.ts.json --ext '.d.ts'",
-    "prepublishOnly": "npm run build"
+    "lint": "eslint src && eslint src -c src/.eslintrc.ts.json --ext '.d.ts'",
+    "build": "rm -rf dist && npm run lint && webpack --mode=production --config webpack.config.js",
+    "prepack": "npm run build"
   },
   "repository": {
     "type": "git",
@@ -30,8 +30,8 @@
     "@typescript-eslint/parser": "^2.19.2",
     "copy-webpack-plugin": "^5.1.1",
     "eslint": "^6.8.0",
+    "terser-webpack-plugin": "^2.3.5",
     "typescript": "^3.7.5",
-    "uglifyjs-webpack-plugin": "^2.2.0",
     "webpack": "^4.41.6",
     "webpack-cli": "^3.3.11",
     "webpack-node-externals": "^1.7.2"
