@@ -1,4 +1,4 @@
-export declare class ArrayQueue<T> implements Iterable<T>
+export declare class ArrayQueue<T>
 {
     public constructor(
         iterable? : Iterable<T>
@@ -6,7 +6,20 @@ export declare class ArrayQueue<T> implements Iterable<T>
 
     public readonly size : number;
 
-    public [Symbol.iterator]() : IteratorResult<T>;
+    public isEmpty() : boolean;
+
+    public isFull() : boolean;
+
+    public forEach(
+        callback : (
+            element : T,
+            index : number,
+            queue : ArrayQueue<T>
+        ) => void,
+        thisArg? : any
+    ) : void;
+
+    public [Symbol.iterator]() : IterableIterator<T>;
 
     public entries() : IterableIterator<[number, T]>;
 
@@ -14,7 +27,7 @@ export declare class ArrayQueue<T> implements Iterable<T>
 
     public values() : IterableIterator<T>;
 
-    public isEmpty() : boolean;
+    public peek() : T | undefined;
 
     public enqueue(
         element : T

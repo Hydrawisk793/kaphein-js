@@ -39,6 +39,25 @@ module.exports = (function ()
 
         size : 0,
 
+        isEmpty : function isEmpty()
+        {
+            return this.size < 1;
+        },
+
+        isFull : function isFull()
+        {
+            return this.size >= Number.MAX_SAFE_INTEGER - 1;
+        },
+
+        forEach : function forEach(callback)
+        {
+            var thisArg = arguments[1];
+
+            for(var i = 0; i < this._elements.length; ++i) {
+                callback.call(thisArg, this._elements[i], i, this);
+            }
+        },
+
         entries : function entries()
         {
             return new ArrayLikePairIterator(this._elements);
@@ -54,9 +73,9 @@ module.exports = (function ()
             return new ArrayLikeValueIterator(this._elements);
         },
 
-        isEmpty : function isEmpty()
+        peek : function peek()
         {
-            return this.size < 1;
+            return (this.isEmpty() ? void 0 : this._elements[0]);
         },
 
         /**
