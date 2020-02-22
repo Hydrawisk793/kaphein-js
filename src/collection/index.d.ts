@@ -14,4 +14,5 @@ export * from "./rb-tree-search-target";
 export * from "./rb-tree-set";
 export * from "./rb-tree-map";
 // export * from "./array-queue";
+export * from "./list-queue";
 export * from "./priority-queue";

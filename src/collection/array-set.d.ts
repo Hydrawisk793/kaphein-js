@@ -2,6 +2,10 @@ import { EqualComparer } from "./equal-comparer";
 
 export declare class ArraySet<T> implements Set<T>
 {
+    public static wrap<T>(
+        src : T[]
+    ) : ArraySet<T>;
+
     public constructor(
         iterable? : Iterable<T>,
         comparer? : EqualComparer<T>

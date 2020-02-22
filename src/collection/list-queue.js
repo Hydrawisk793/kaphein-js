@@ -1,70 +1,40 @@
-var isUndefined = require("../type-trait").isUndefined;
-var isFunction = require("../type-trait").isFunction;
 var isIterable = require("../type-trait").isIterable;
 var isSymbolSupported = require("./is-symbol-supported").isSymbolSupported;
+var forOf = require("./utils").forOf;
 
 module.exports = (function ()
 {
     /**
      *  @template T
      *  @constructor
+     *  @param {Iterable<T>} [iterable]
      */
     function ListQueue()
     {
         /**  @type {ListNode<T>} */this._head = null;
         /**  @type {ListNode<T>} */this._tail = null;
-        this._elemCount = 0;
+        this.size = 0;
+
+        var iterable = arguments[0];
+        if(isIterable(iterable)) {
+            forOf(
+                iterable,
+                /**
+                 *  @this {ListQueue<T>}
+                 */
+                function (element)
+                {
+                    this.enqueue(element);
+                },
+                this
+            );
+        }
     }
-
-    /**
-     *  @template T
-     *  @param {Object} iterable
-     *  @param {(value : T) => T} [mapFunc]
-     *  @param {Object} [thisArg]
-     */
-    ListQueue.from = function from(iterable)
-    {
-        if(!isIterable(iterable)) {
-            throw new TypeError("'iterable' must have the property 'Symbol.iterator'.");
-        }
-
-        var queue = new ListQueue();
-
-        var mapFunc = arguments[1];
-        if(isUndefined(mapFunc)) {
-            for(
-                var i = iterable[Symbol.iterator](), iP = i.next();
-                !iP.done;
-                iP = i.next()
-            ) {
-                queue.enqueue(iP.value);
-            }
-        }
-        else {
-            if(!isFunction(mapFunc)) {
-                throw new TypeError("'mapFunc' must be a function.");
-            }
-            var thisArg = arguments[2];
-
-            for(
-                i = iterable[Symbol.iterator](), iP = i.next();
-                !iP.done;
-                iP = i.next()
-            ) {
-                queue.enqueue(mapFunc.call(thisArg, iP.value));
-            }
-        }
-
-        return queue;
-    };
 
     ListQueue.prototype = {
         constructor : ListQueue,
 
-        getElementCount : function getElementCount()
-        {
-            return this._elemCount;
-        },
+        size : 0,
 
         isEmpty : function isEmpty()
         {
@@ -73,7 +43,32 @@ module.exports = (function ()
 
         isFull : function isFull()
         {
-            return this._elemCount >= Number.MAX_SAFE_INTEGER;
+            return this.size >= Number.MAX_SAFE_INTEGER;
+        },
+
+        forEach : function forEach(callback)
+        {
+            var thisArg = arguments[1];
+
+            for(var i = 0, current = this._head; current; ++i, current = current.next) {
+                callback.call(thisArg, current.element, i, this);
+            }
+        },
+
+        /**
+         *  @returns {Iterator<[number, T]>}
+         */
+        entries : function entries()
+        {
+            return new PairIterator(this, this._head);
+        },
+
+        /**
+         *  @returns {Iterator<number>}
+         */
+        keys : function keys()
+        {
+            return new KeyIterator(this, this._head);
         },
 
         /**
@@ -81,32 +76,12 @@ module.exports = (function ()
          */
         values : function values()
         {
-            return ({
-                next : function next()
-                {
-                    var out = {
-                        done : null === this._current
-                    };
-
-                    if(!out.done) {
-                        out.value = this._current.element;
-                        this._current = this._current.next;
-                    }
-
-                    return out;
-                },
-
-                _current : this._head
-            });
+            return new ValueIterator(this._head);
         },
 
         peek : function peek()
         {
-            if(this.isEmpty()) {
-                throw new Error("The queue has no element.");
-            }
-
-            return this._head.element;
+            return (this.isEmpty() ? void 0 : this._head.element);
         },
 
         /**
@@ -114,14 +89,11 @@ module.exports = (function ()
          */
         enqueue : function enqueue(e)
         {
-            var newNode;
-
             if(this.isFull()) {
-                throw new Error("Cannot enqueue elements any more.");
+                throw new Error("The queue is full.");
             }
 
-            newNode = new ListNode(e, null);
-
+            var newNode = new ListNode(e, null);
             if(!this.isEmpty()) {
                 this._tail.next = newNode;
             }
@@ -130,31 +102,29 @@ module.exports = (function ()
             }
             this._tail = newNode;
 
-            ++this._elemCount;
+            ++this.size;
 
             return this;
         },
 
         dequeue : function dequeue()
         {
-            if(this.isEmpty()) {
-                throw new Error("The queue has no element.");
+            var element = void 0;
+            if(!this.isEmpty()) {
+                if(this._head !== this._tail) {
+                    element = this._head.element;
+    
+                    this._head = this._head.next;
+                }
+                else {
+                    element = this._tail.element;
+
+                    this._head = null;
+                    this._tail = null;
+                }
+
+                --this.size;
             }
-
-            var element = null;
-            if(this._head !== this._tail) {
-                element = this._head.element;
-
-                this._head = this._head.next;
-            }
-            else {
-                element = this._tail.element;
-
-                this._head = null;
-                this._tail = null;
-            }
-
-            --this._elemCount;
 
             return element;
         },
@@ -187,29 +157,6 @@ module.exports = (function ()
         }
     };
 
-    if(isSymbolSupported()) {
-        ListQueue.prototype[Symbol.iterator] = function ()
-        {
-            return ({
-                next : function next()
-                {
-                    var out = {
-                        done : null === this._current
-                    };
-
-                    if(!out.done) {
-                        out.value = this._current.element;
-                        this._current = this._current.next;
-                    }
-
-                    return out;
-                },
-
-                _current : this._head
-            });
-        };
-    }
-
     /**
      *  @template T
      *  @constructor
@@ -225,6 +172,145 @@ module.exports = (function ()
     ListNode.prototype = {
         constructor : ListNode
     };
+
+    /**
+     *  @template T
+     *  @constructor
+     *  @param {ListQueue<T>} q
+     *  @param {ListNode<T>} node
+     */
+    function PairIterator(q, node)
+    {
+        this._current = node;
+        this._index = ListQueue_nodeIndexOf(q, node);
+    }
+
+    PairIterator.prototype = {
+        constructor : PairIterator,
+
+        /**
+         *  @returns {IteratorResult<[number, T]>}
+         */
+        next : function next()
+        {
+            var done = this._index >= 0 && !this._current;
+            var out = {
+                value : (done ? void 0 : [this._index, this._current.element]),
+                done : done
+            };
+
+            if(!done) {
+                this._current = this._current.next;
+                ++this._index;
+            }
+
+            return out;
+        }
+    };
+
+    /**
+     *  @template T
+     *  @constructor
+     *  @param {ListQueue<T>} q
+     *  @param {ListNode<T>} node
+     */
+    function KeyIterator(q, node)
+    {
+        this._current = node;
+        this._index = ListQueue_nodeIndexOf(q, node);
+    }
+
+    KeyIterator.prototype = {
+        constructor : KeyIterator,
+
+        /**
+         *  @returns {IteratorResult<number>}
+         */
+        next : function next()
+        {
+            var done = this._index >= 0 && !this._current;
+            var out = {
+                value : (done ? void 0 : this._index),
+                done : done
+            };
+
+            if(!done) {
+                this._current = this._current.next;
+                ++this._index;
+            }
+
+            return out;
+        }
+    };
+
+    /**
+     *  @template T
+     *  @constructor
+     *  @param {ListNode<T>} node
+     */
+    function ValueIterator(node)
+    {
+        this._current = node;
+    }
+
+    ValueIterator.prototype = {
+        constructor : ValueIterator,
+
+        /**
+         *  @returns {IteratorResult<T>}
+         */
+        next : function next()
+        {
+            var done = !this._current;
+            var out = {
+                value : (done ? void 0 : this._current.element),
+                done : done
+            };
+
+            if(!done) {
+                this._current = this._current.next;
+            }
+
+            return out;
+        }
+    };
+
+    if(isSymbolSupported()) {
+        ListQueue.prototype[Symbol.iterator] = ListQueue.prototype.values;
+
+        ListQueue.prototype[Symbol.toStringTag] = "ListQueue";
+
+        var returnThis = function ()
+        {
+            return this;
+        };
+
+        PairIterator.prototype[Symbol.iterator] = returnThis;
+
+        KeyIterator.prototype[Symbol.iterator] = returnThis;
+
+        ValueIterator.prototype[Symbol.iterator] = returnThis;
+    }
+
+    /**
+     *  @template T
+     *  @param {ListQueue<T>} thisRef
+     *  @param {ListNode<T>} target
+     */
+    function ListQueue_nodeIndexOf(thisRef, target) {
+        var index = 0;
+        for(
+            var current = thisRef._head;
+            current && current !== target;
+            ++index, current = current.next
+        );
+
+        if(index >= thisRef.size) {
+            index = -1;
+        }
+
+        return index;
+    }
 
     return {
         ListQueue : ListQueue

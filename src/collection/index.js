@@ -15,6 +15,7 @@ var NumberSet = require("./number-set").NumberSet;
 var RbTreeSearchTarget = require("./rb-tree-search-target").RbTreeSearchTarget;
 var RbTreeSet = require("./rb-tree-set").RbTreeSet;
 var RbTreeMap = require("./rb-tree-map").RbTreeMap;
+var ListQueue = require("./list-queue").ListQueue;
 var PriorityQueue = require("./priority-queue").PriorityQueue;
 
 module.exports = {
@@ -35,5 +36,6 @@ module.exports = {
     RbTreeSearchTarget : RbTreeSearchTarget,
     RbTreeSet : RbTreeSet,
     RbTreeMap : RbTreeMap,
+    ListQueue : ListQueue,
     PriorityQueue : PriorityQueue
 };

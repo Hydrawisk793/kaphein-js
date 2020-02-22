@@ -1,4 +1,5 @@
 var isUndefinedOrNull = require("../type-trait").isUndefinedOrNull;
+var isArray = require("../type-trait").isArray;
 var isIterable = require("../type-trait").isIterable;
 var isSymbolSupported = require("./is-symbol-supported").isSymbolSupported;
 
@@ -17,7 +18,7 @@ module.exports = (function ()
 
         var iterable = arguments[0];
         if(!isUndefinedOrNull(iterable)) {
-            if(Array.isArray(iterable)) {
+            if(isArray(iterable)) {
                 for(var i = 0; i < iterable.length; ++i) {
                     this.add(iterable[i]);
                 }
@@ -27,7 +28,6 @@ module.exports = (function ()
                 for(var iterResult = iter.next(); !iterResult.done; iterResult = iter.next()) {
                     this.add(iterResult.value);
                 }
-
             }
             else {
                 throw new TypeError("The argument must be an iterable.");
