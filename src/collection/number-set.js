@@ -1,8 +1,9 @@
 var isUndefinedOrNull = require("../type-trait").isUndefinedOrNull;
+var isArray = require("../type-trait").isArray;
 var isIterable = require("../type-trait").isIterable;
 var isSymbolSupported = require("./is-symbol-supported").isSymbolSupported;
 
-var NumberSet = (function ()
+module.exports = (function ()
 {
     var _hasOwnProperty = Object.prototype.hasOwnProperty;
     var _isSymbolSupported = isSymbolSupported();
@@ -17,7 +18,7 @@ var NumberSet = (function ()
 
         var iterable = arguments[0];
         if(!isUndefinedOrNull(iterable)) {
-            if(Array.isArray(iterable)) {
+            if(isArray(iterable)) {
                 for(var i = 0; i < iterable.length; ++i) {
                     this.add(iterable[i]);
                 }
@@ -27,7 +28,6 @@ var NumberSet = (function ()
                 for(var iterResult = iter.next(); !iterResult.done; iterResult = iter.next()) {
                     this.add(iterResult.value);
                 }
-
             }
             else {
                 throw new TypeError("The argument must be an iterable.");
@@ -179,9 +179,7 @@ var NumberSet = (function ()
         NumberSet.prototype[Symbol.toStringTag] = "NumberSet";
     }
 
-    return NumberSet;
+    return {
+        NumberSet : NumberSet
+    };
 })();
-
-module.exports = {
-    NumberSet : NumberSet
-};

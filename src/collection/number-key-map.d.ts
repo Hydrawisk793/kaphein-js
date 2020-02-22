@@ -82,7 +82,5 @@ export declare class NumberKeyMap<V> implements Map<number, V>
         value : V
     ) : this;
 
-    public toString() : string;
-
     public toPlainObject() : { [key : number] : V };
 }

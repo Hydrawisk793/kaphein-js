@@ -1,14 +1,15 @@
-var isUndefined = require("../type-trait").isUndefined;
+var isArray = require("../type-trait").isArray;
 var isIterable = require("../type-trait").isIterable;
 var isCallable = require("../type-trait").isCallable;
 var isSymbolSupported = require("./is-symbol-supported").isSymbolSupported;
 var setAppend = require("./set-extensions").append;
 var defaultEqualComparer = require("./detail").defaultEqualComparer;
+var ArrayLikePairIterator = require("./array-like-iterator").ArrayLikePairIterator;
+var ArrayLikeKeyIterator = require("./array-like-iterator").ArrayLikeKeyIterator;
+var ArrayLikeValueIterator = require("./array-like-iterator").ArrayLikeValueIterator;
 
-var ArraySet = (function ()
+module.exports = (function ()
 {
-    var _isSymbolSupported = isSymbolSupported();
-
     /**
      *  @template T
      *  @typedef {import("./equal-comparer").EqualComparer<T>} EqualComparer<T>
@@ -35,17 +36,27 @@ var ArraySet = (function ()
         }
     }
 
+    /**
+     *  @template T
+     *  @param {T[]} src
+     */
+    ArraySet.wrap = function wrap(src)
+    {
+        /** @type {ArraySet<T>} */var set = new ArraySet();
+        set.attach(src);
+
+        return set;
+    };
+
     ArraySet.prototype = {
         constructor : ArraySet,
-
-        size : 0,
 
         /**
          *  @param {T[]} arr
          */
         attach : function attach(arr)
         {
-            if(!Array.isArray(arr)) {
+            if(!isArray(arr)) {
                 throw new TypeError("'arr' must be an array.");
             }
 
@@ -61,6 +72,8 @@ var ArraySet = (function ()
 
             return arr;
         },
+
+        size : 0,
 
         /**
          *  @returns {number}
@@ -99,28 +112,19 @@ var ArraySet = (function ()
             }
         },
 
-        /**
-         *  @returns {PairIterator<T>}
-         */
         entries : function entries()
         {
-            return new PairIterator(this);
+            return new ArrayLikePairIterator(this._elements);
         },
 
-        /**
-         *  @returns {ValueIterator<T>}
-         */
         keys : function keys()
         {
-            return new ValueIterator(this);
+            return new ArrayLikeKeyIterator(this._elements);
         },
 
-        /**
-         *  @returns {ValueIterator<T>}
-         */
         values : function values()
         {
-            return new ValueIterator(this);
+            return new ArrayLikeValueIterator(this._elements);
         },
 
         /**
@@ -267,90 +271,13 @@ var ArraySet = (function ()
         }
     };
 
-    if(_isSymbolSupported) {
+    if(isSymbolSupported()) {
         ArraySet.prototype[Symbol.iterator] = ArraySet.prototype.values;
 
         ArraySet.prototype[Symbol.toStringTag] = "ArraySet";
     }
 
-    /**
-     *  @template T
-     *  @constructor
-     *  @param {ArraySet<T>} arraySet
-     *  @param {number} [index]
-     */
-    function PairIterator(arraySet, index)
-    {
-        this._arraySet = arraySet;
-        this._index = (isUndefined(index) ? 0 : index);
-    }
-
-    /**
-     *  @returns {IteratorReturnResult<[T,T]>}
-     */
-    PairIterator.prototype.next = function ()
-    {
-        var out = {
-            done : this._index >= this._arraySet.getElementCount()
-        };
-
-        if(!out.done) {
-            var value = this._arraySet.getAt(this._index);
-            out.value = [value, value];
-
-            ++this._index;
-        }
-
-        return out;
+    return {
+        ArraySet : ArraySet
     };
-
-    if(_isSymbolSupported) {
-        PairIterator.prototype[Symbol.iterator] = function ()
-        {
-            return this;
-        };
-    }
-
-    /**
-     *  @template T
-     *  @constructor
-     *  @param {ArraySet<T>} arraySet
-     *  @param {number} [index]
-     */
-    function ValueIterator(arraySet, index)
-    {
-        this._arraySet = arraySet;
-        this._index = (isUndefined(index) ? 0 : index);
-    }
-
-    /**
-     *  @returns {IteratorReturnResult<T>}
-     */
-    ValueIterator.prototype.next = function ()
-    {
-        var out = {
-            done : this._index >= this._arraySet.getElementCount()
-        };
-
-        if(!out.done) {
-            out.value = this._arraySet.getAt(this._index);
-
-            ++this._index;
-        }
-
-        return out;
-    };
-
-    if(_isSymbolSupported) {
-        ValueIterator.prototype[Symbol.iterator] = function ()
-        {
-            return this;
-        };
-    }
-
-    return ArraySet;
 })();
-
-module.exports = {
-    ArraySet : ArraySet
-};

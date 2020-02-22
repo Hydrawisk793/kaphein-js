@@ -1,4 +1,4 @@
-var PriorityQueue = (function ()
+module.exports = (function ()
 {
     var _rootIndex = 1;
 
@@ -189,9 +189,7 @@ var PriorityQueue = (function ()
         thisRef._nodes[targetIndex] = target;
     }
 
-    return PriorityQueue;
+    return {
+        PriorityQueue : PriorityQueue
+    };
 })();
-
-module.exports = {
-    PriorityQueue : PriorityQueue
-};
