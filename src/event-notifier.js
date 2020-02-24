@@ -89,7 +89,7 @@ module.exports = (function ()
          */
         notify : function notify(eventName, eventArgs)
         {
-            /**  @type {any[]} */var results = [];
+            /** @type {any[]} */var results = [];
 
             var handlerMap = EventNotifier_getHandlerMap(this, eventName);
             if(null !== handlerMap && handlerMap.size > 0) {
