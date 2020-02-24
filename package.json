@@ -1,6 +1,10 @@
 {
   "name": "kaphein-js",
+<<<<<<< HEAD
   "version": "0.2.0",
+=======
+  "version": "0.2.1",
+>>>>>>> develop
   "description": "A toolkit for developing various softwares in JavaScript.",
   "main": "dist/index.js",
   "module": "dist/index.js",
