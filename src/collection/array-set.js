@@ -39,18 +39,11 @@ module.exports = (function ()
     /**
      *  @template T
      *  @param {T[]} src
-<<<<<<< HEAD
-     */
-    ArraySet.wrap = function wrap(src)
-    {
-        /** @type {ArraySet<T>} */var set = new ArraySet();
-=======
      *  @param {EqualComparer<T>} [comparer]
      */
     ArraySet.wrap = function wrap(src)
     {
         /** @type {ArraySet<T>} */var set = new ArraySet(null, arguments[1]);
->>>>>>> develop
         set.attach(src);
 
         return set;

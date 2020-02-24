@@ -3,12 +3,8 @@ import { EqualComparer } from "./equal-comparer";
 export declare class ArrayMap<K, V> implements Map<K, V>
 {
     public static wrap<K, V>(
-<<<<<<< HEAD
-        src : [K, V][]
-=======
         src : [K, V][],
         keyEqualComparer? : EqualComparer<K>
->>>>>>> develop
     ) : ArrayMap<K, V>;
 
     public constructor(
