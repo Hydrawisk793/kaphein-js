@@ -3,7 +3,8 @@ import { EqualComparer } from "./equal-comparer";
 export declare class ArraySet<T> implements Set<T>
 {
     public static wrap<T>(
-        src : T[]
+        src : T[],
+        comparer? : EqualComparer<T>
     ) : ArraySet<T>;
 
     public constructor(

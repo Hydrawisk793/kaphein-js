@@ -38,10 +38,11 @@ module.exports = (function ()
     /**
      *  @template K, V
      *  @param {[K, V][]} src
+     *  @param {EqualComparer<K>} [keyEqualComparer]
      */
     ArrayMap.wrap = function wrap(src)
     {
-        /** @type {ArrayMap<K, V>} */var map = new ArrayMap();
+        /** @type {ArrayMap<K, V>} */var map = new ArrayMap(null, arguments[1]);
         map.attach(src);
 
         return map;
