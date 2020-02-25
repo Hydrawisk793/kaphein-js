@@ -41,6 +41,11 @@ module.exports = (function ()
             return (timer ? timer : null);
         },
 
+        getTimerNames : function getTimerNames()
+        {
+            return Array.from(this._timerMap.keys());
+        },
+
         /**
          *  @param {*} [value]
          */

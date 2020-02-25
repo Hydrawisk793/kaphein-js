@@ -75,6 +75,8 @@ export declare class TimerScheduler
         name : string
     ) : Timer | null;
 
+    public getTimerNames() : string[];
+
     public stopAll(
         value? : any
     ) : Promise<{
