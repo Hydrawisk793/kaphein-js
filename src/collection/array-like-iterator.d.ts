@@ -12,7 +12,7 @@ export declare class ArrayLikePairIterator<T> implements IterableIterator<[numbe
 export declare class ArrayLikeKeyIterator implements IterableIterator<number>
 {
     public constructor(
-        arrayLike : ArrayLike<T>
+        arrayLike : ArrayLike<number>
     );
 
     public next() : IteratorResult<number>;

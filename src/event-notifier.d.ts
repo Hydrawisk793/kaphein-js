@@ -37,9 +37,9 @@ export declare class EventNotifier
         eventArgs : any,
         onFinished? : (
             e : {
-                source : thisRef;
-                eventName : eventName;
-                eventArgs : eventArgs;
+                source : EventNotifier;
+                eventName : string;
+                eventArgs : any;
                 results : any[] | null;
                 error : any | null;
             }

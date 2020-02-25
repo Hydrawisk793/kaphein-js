@@ -93,9 +93,3 @@ export declare class TimerScheduler
         value : any
     }[]>;
 }
-
-export {
-    TimerEventMap,
-    Timer,
-    TimerScheduler,
-};
