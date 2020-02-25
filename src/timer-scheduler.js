@@ -155,7 +155,7 @@ module.exports = (function ()
 
         isRunning : function isRunning()
         {
-            return TimerState.RUNNING === this._state;
+            return TimerState.STOPPED !== this._state;
         },
 
         /**
