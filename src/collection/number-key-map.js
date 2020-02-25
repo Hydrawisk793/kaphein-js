@@ -173,27 +173,6 @@ module.exports = (function ()
         }
     };
 
-    if(isSymbolSupported()) {
-        NumberKeyMap.prototype[Symbol.iterator] = NumberKeyMap.prototype.entries;
-
-        NumberKeyMap.prototype[Symbol.toStringTag] = "NumberKeyMap";
-
-        PairIterator.prototype[Symbol.iterator] = function ()
-        {
-            return this;
-        };
-
-        KeyIterator.prototype[Symbol.iterator] = function ()
-        {
-            return this;
-        };
-
-        ValueIterator.prototype[Symbol.iterator] = function ()
-        {
-            return this;
-        };
-    }
-
     var _hasOwnProperty = Object.prototype.hasOwnProperty;
 
     function _assertIsKeyNumber(key)
@@ -292,6 +271,27 @@ module.exports = (function ()
             return result;
         }
     };
+
+    if(isSymbolSupported()) {
+        NumberKeyMap.prototype[Symbol.iterator] = NumberKeyMap.prototype.entries;
+
+        NumberKeyMap.prototype[Symbol.toStringTag] = "NumberKeyMap";
+
+        PairIterator.prototype[Symbol.iterator] = function ()
+        {
+            return this;
+        };
+
+        KeyIterator.prototype[Symbol.iterator] = function ()
+        {
+            return this;
+        };
+
+        ValueIterator.prototype[Symbol.iterator] = function ()
+        {
+            return this;
+        };
+    }
 
     return {
         NumberKeyMap : NumberKeyMap

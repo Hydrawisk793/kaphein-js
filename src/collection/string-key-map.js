@@ -173,27 +173,6 @@ module.exports = (function ()
         }
     };
 
-    if(isSymbolSupported()) {
-        StringKeyMap.prototype[Symbol.iterator] = StringKeyMap.prototype.entries;
-
-        StringKeyMap.prototype[Symbol.toStringTag] = "StringKeyMap";
-
-        PairIterator.prototype[Symbol.iterator] = function ()
-        {
-            return this;
-        };
-
-        KeyIterator.prototype[Symbol.iterator] = function ()
-        {
-            return this;
-        };
-
-        ValueIterator.prototype[Symbol.iterator] = function ()
-        {
-            return this;
-        };
-    }
-
     var _hasOwnProperty = Object.prototype.hasOwnProperty;
 
     function _assertIsKeyString(key)
@@ -292,6 +271,27 @@ module.exports = (function ()
             return result;
         }
     };
+
+    if(isSymbolSupported()) {
+        StringKeyMap.prototype[Symbol.iterator] = StringKeyMap.prototype.entries;
+
+        StringKeyMap.prototype[Symbol.toStringTag] = "StringKeyMap";
+
+        PairIterator.prototype[Symbol.iterator] = function ()
+        {
+            return this;
+        };
+
+        KeyIterator.prototype[Symbol.iterator] = function ()
+        {
+            return this;
+        };
+
+        ValueIterator.prototype[Symbol.iterator] = function ()
+        {
+            return this;
+        };
+    }
 
     return {
         StringKeyMap : StringKeyMap
