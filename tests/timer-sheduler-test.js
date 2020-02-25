@@ -34,6 +34,8 @@ timer1.addEventListener(
             );
         }
 
+        console.log("timer names : ", e.source.getTimerScheduler().getTimerNames());
+
         if(e.context.counter >= 10) {
             e.source.getTimerScheduler().stopAll("stopAll");
         }

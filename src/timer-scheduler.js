@@ -41,6 +41,11 @@ module.exports = (function ()
             return (timer ? timer : null);
         },
 
+        getTimerNames : function getTimerNames()
+        {
+            return Array.from(this._timerMap.keys());
+        },
+
         /**
          *  @param {*} [value]
          */
@@ -155,7 +160,7 @@ module.exports = (function ()
 
         isRunning : function isRunning()
         {
-            return TimerState.RUNNING === this._state;
+            return TimerState.STOPPED !== this._state;
         },
 
         /**
