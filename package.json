@@ -1,6 +1,6 @@
 {
   "name": "kaphein-js",
-  "version": "0.2.2",
+  "version": "0.3.0",
   "description": "A toolkit for developing various softwares in JavaScript.",
   "main": "dist/index.js",
   "module": "dist/index.js",
@@ -10,8 +10,8 @@
   ],
   "scripts": {
     "lint": "eslint src && eslint src -c src/.eslintrc.ts.json --ext '.d.ts'",
-    "build": "rm -rf dist && npm run lint && webpack --mode=production --config webpack.config.js",
-    "prepack": "npm run build"
+    "build": "rm -rf dist && npm run lint && webpack --mode production --config webpack.config.js",
+    "prepack": "npm install && npm run build"
   },
   "repository": {
     "type": "git",
@@ -31,7 +31,7 @@
     "copy-webpack-plugin": "^5.1.1",
     "eslint": "^6.8.0",
     "terser-webpack-plugin": "^2.3.5",
-    "typescript": "^3.7.5",
+    "typescript": "^3.8.2",
     "webpack": "^4.41.6",
     "webpack-cli": "^3.3.11",
     "webpack-node-externals": "^1.7.2"

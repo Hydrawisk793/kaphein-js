@@ -89,7 +89,7 @@ module.exports = (function ()
          */
         notify : function notify(eventName, eventArgs)
         {
-            /**  @type {any[]} */var results = [];
+            /** @type {any[]} */var results = [];
 
             var handlerMap = EventNotifier_getHandlerMap(this, eventName);
             if(null !== handlerMap && handlerMap.size > 0) {
@@ -119,6 +119,15 @@ module.exports = (function ()
         /**
          *  @param {string} eventName
          *  @param {*} [eventArgs]
+         *  @param {(
+                e : {
+                    source : thisRef;
+                    eventName : eventName;
+                    eventArgs : eventArgs;
+                    results : any[] | null;
+                    error : any | null;
+                }
+            ) => void} [onFinished]
          */
         dispatch : function dispatch(eventName, eventArgs)
         {
@@ -127,6 +136,7 @@ module.exports = (function ()
                 var handlersToBeRemoved = [];
                 var i = 0;
 
+                var handlers = [];
                 var descriptors = Array.from(handlerMap.values());
                 for(i = 0; i < descriptors.length; ++i) {
                     var descriptor = descriptors[i];
@@ -136,8 +146,10 @@ module.exports = (function ()
                         handlersToBeRemoved.push(handler);
                     }
 
-                    EventNotifier_dispatchHandlerAndArgs(handler, eventArgs);
+                    handlers.push(handler);
                 }
+
+                EventNotifier_dispatchHandlerAndArgs(this, handlers, eventName, eventArgs, arguments[2]);
 
                 for(i = 0; i < handlersToBeRemoved.length; ++i) {
                     handlerMap["delete"](handlersToBeRemoved[i]);
@@ -148,15 +160,48 @@ module.exports = (function ()
         }
     };
 
-    function EventNotifier_dispatchHandlerAndArgs(handler, eventArgs)
+    function EventNotifier_dispatchHandlerAndArgs(thisRef, handlers, eventName, eventArgs)
     {
+        var onFinished = arguments[4];
+
         // The JavaScript runtime will queue the execution of the callback in the internal event queue immediately,  
         // and the callback will be pushed into the internal stack after the stack is empty.
         setTimeout(
-            function ()
-            {
-                handler(eventArgs);
-            },
+            (
+                isFunction(onFinished)
+                ? function () 
+                {
+                    var results = [];
+                    try {
+                        for(var i = 0; i < handlers.length; ++i) {
+                            results.push(handlers[i](eventArgs));
+                        }
+
+                        onFinished({
+                            source : thisRef,
+                            eventName : eventName,
+                            eventArgs : eventArgs,
+                            results : results,
+                            error : null
+                        });
+                    }
+                    catch(error) {
+                        onFinished({
+                            source : thisRef,
+                            eventName : eventName,
+                            eventArgs : eventArgs,
+                            results : null,
+                            error : error
+                        });
+                    }
+                }
+                : function ()
+                {
+                    for(var i = 0; i < handlers.length; ++i) {
+                        handlers[i](eventArgs);
+                    }
+                }
+            ),
             0
         );
     }

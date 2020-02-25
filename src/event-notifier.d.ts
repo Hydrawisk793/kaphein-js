@@ -34,6 +34,15 @@ export declare class EventNotifier
 
     public dispatch(
         eventName : string,
-        eventArgs : any
+        eventArgs : any,
+        onFinished? : (
+            e : {
+                source : thisRef;
+                eventName : eventName;
+                eventArgs : eventArgs;
+                results : any[] | null;
+                error : any | null;
+            }
+        ) => void
     ) : this;
 }

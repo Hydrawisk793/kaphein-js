@@ -8,6 +8,7 @@ var objectUtils = require("./object-utils");
 var memoize = require("./memoize").memoize;
 var EventNotifier = require("./event-notifier").EventNotifier;
 var Logger = require("./logger").Logger;
+var TimerScheduler = require("./timer-scheduler").TimerScheduler;
 
 module.exports = Object.assign(
     {},
@@ -20,6 +21,7 @@ module.exports = Object.assign(
     {
         memoize : memoize,
         EventNotifier : EventNotifier,
-        Logger : Logger
+        Logger : Logger,
+        TimerScheduler : TimerScheduler
     }
 );
