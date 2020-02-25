@@ -1,6 +1,6 @@
 {
   "name": "kaphein-js",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "A toolkit for developing various softwares in JavaScript.",
   "main": "dist/index.js",
   "module": "dist/index.js",
