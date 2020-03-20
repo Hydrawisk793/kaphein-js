@@ -77,3 +77,28 @@ function case2Pseudo()
 }
 
 case2Pseudo();
+
+function case3()
+{
+    var p = new Promise(function (resolve, reject) {
+        setTimeout(function () {reject(new Error("error"));}, 3000);
+    });
+    var c1 = p.catch(function (error) { console.log("catch", "1", error); });
+    var c2 = p.catch(function (error) { console.log("catch", "2", error); });
+    var c3 = p.catch(function (error) { console.log("catch", "3", error); });
+    var c4 = p.catch(function (error) { console.log("catch", "4", error); });
+    var c5 = p.catch(function (error) { console.log("catch", "5", error); });
+    var c6 = p.catch(function (error) { console.log("catch", "6", error); });
+    var c7 = p.catch(function (error) { console.log("catch", "7", error); });
+    console.log(p, c1, c2, c3, c4, c5, c6, c7);
+
+    setTimeout(
+        function ()
+        {
+            console.log(p, c1, c2, c3, c4, c5, c6, c7);
+        },
+        3500
+    );
+}
+
+case3();

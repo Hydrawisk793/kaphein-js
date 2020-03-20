@@ -1,7 +1,3 @@
-var isFunction = require("../type-trait").isFunction;
-var isPromiseLike = require("../type-trait").isPromiseLike;
-var EventNotifier = require("../event-notifier").EventNotifier;
-
 module.exports = (function ()
 {
     /**
@@ -14,83 +10,71 @@ module.exports = (function ()
     */
     function PseudoPromise(executor)
     {
-        if(!(this instanceof PseudoPromise)) {
-            throw new Error("An invalid promise constructor call.");
-        }
-
-        if(!isFunction(executor)) {
+        if("function" !== typeof executor) {
             throw new TypeError("'executor' must be a function.");
         }
 
-        PseudoPromise_init.call(this);
+        this._state = "pending";
+        this._result = void 0;
+        this._fulfillReactions = [];
+        this._rejectReactions = [];
 
+        var reactionFunctions = _createReactionFunctions(this);
         try {
-            executor(this._resolve, this._reject);
+            executor(reactionFunctions.resolve, reactionFunctions.reject);
         }
         catch(error) {
-            this._reject(error);
+            reactionFunctions.reject(error);
         }
-    }
-
-    /**
-     *  @template {any} T
-     *  @this {PseudoPromise<T>}
-     */
-    function PseudoPromise_init()
-    {
-        // PseudoPromise._register(this);
-
-        this._state = "pending";
-        this._result = null;
-        this._resolve = PseudoPromise_resolve.bind(this);
-        this._reject = PseudoPromise_reject.bind(this);
-        this._eventNotifier = new EventNotifier();
     }
 
     PseudoPromise.prototype = {
         constructor : PseudoPromise,
 
+        _state : "pending",
+
+        _result : void 0,
+
+        /** @type {_Reaction[]} */_fulfillReactions : void 0,
+
+        /** @type {_Reaction[]} */_rejectReactions : void 0,
+
         then : function then(onFulfilled)
         {
-            var promise = /** @type {PseudoPromise} */(Object.create(PseudoPromise.prototype));
-            PseudoPromise_init.call(promise);
-
-            console.log("then", "this._eventNotifier.add");
+            if("function" !== typeof onFulfilled) {
+                throw new TypeError("'onFulfilled' must be a function.");
+            }
 
             var onRejected = arguments[1];
-            this._eventNotifier.add(
-                "_onResolved",
-                PseudoPromise_createHandler(promise, onFulfilled),
-                { once : true }
-            );
-            this._eventNotifier.add(
-                "_onRejected",
-                PseudoPromise_createHandler(promise, onRejected),
-                { once : true }
-            );
+            if(arguments.length > 1 && "function" !== typeof onRejected) {
+                throw new TypeError("'onRejected' must be a function.");
+            }
+
+            /** @type {PseudoPromise<T>} */var promise = Object.create(PseudoPromise.prototype);
+            promise._fulfillReactions = [];
+            promise._rejectReactions = [];
+
+            // TODO : Write code.
+            // eslint-disable-next-line no-unused-vars
+            var resolveReaction = new _Reaction(promise, onFulfilled);
+
+            // TODO : Write code.
 
             return promise;
         },
-    
+
         // eslint-disable-next-line no-unused-vars
         "catch" : function (onRejected)
         {
-            var promise = /** @type {PseudoPromise} */(Object.create(PseudoPromise.prototype));
-            PseudoPromise_init.call(promise);
+            if("function" !== typeof onRejected) {
+                throw new TypeError("'onRejected' must be a function.");
+            }
 
-            this._eventNotifier.add(
-                "_onResolved",
-                function (p)
-                {
-                    promise._resolve(p._result);
-                },
-                { once : true }
-            );
-            this._eventNotifier.add(
-                "_onRejected",
-                PseudoPromise_createHandler(promise, onRejected),
-                { once : true }
-            );
+            // TODO : Write code.
+
+            /** @type {PseudoPromise<T>} */var promise = Object.create(PseudoPromise.prototype);
+            promise._fulfillReactions = [];
+            promise._rejectReactions = [];
 
             return promise;
         }
@@ -132,86 +116,111 @@ module.exports = (function ()
     };
 
     /**
-     *  @template {any} T
-     *  @this {PseudoPromise}
-     *  @param {T} value
+     *  @template T
+     *  @param {PseudoPromise<T>} thisRef
      */
-    function PseudoPromise_resolve(value)
+    function _createReactionFunctions(thisRef)
     {
-        this._result = value;
-        this._state = "resolved";
-
-        console.log("PseudoPromise_resolve");
-
-        var thisRef = this;
-        setTimeout(
-            function ()
+        return {
+            resolve : function resolve(value)
             {
-                thisRef._eventNotifier.dispatch(
-                    "_onResolved",
-                    thisRef
-                );
-            }
-        );
-    }
+                if("pending" !== thisRef._state) {
+                    throw new Error("");
+                }
 
-    /**
-     *  @this {PseudoPromise}
-     */
-    function PseudoPromise_reject(reason)
-    {
-        this._result = reason;
-        this._state = "rejected";
+                thisRef._state = "fulfilled";
+                thisRef._result = value;
 
-        console.log("PseudoPromise_reject");
+                while(thisRef._fulfillReactions.length > 0) {
+                    var reaction = thisRef._fulfillReactions.shift();
+                    _queueReaction(thisRef, reaction);
+                }
 
-        var thisRef = this;
-        setTimeout(
-            function ()
+                thisRef._fulfillReactions = void 0;
+                thisRef._rejectReactions = void 0;
+            },
+
+            reject : function reject(reason)
             {
-                thisRef._eventNotifier.dispatch(
-                    "_onRejected",
-                    thisRef
-                );
+                if("pending" !== thisRef._state) {
+                    throw new Error("");
+                }
+
+                thisRef._state = "rejected";
+                thisRef._state = reason;
+
+                while(thisRef._rejectedReactions.length > 0) {
+                    var reaction = thisRef._rejectedReactions.shift();
+                    _queueReaction(thisRef, reaction);
+                }
+
+                thisRef._fulfillReactions = void 0;
+                thisRef._rejectReactions = void 0;
             }
-        );
+        };
     }
 
     /**
      *  @template T
+     *  @constructor
      *  @param {PseudoPromise<T>} promise
-     *  @param {Function} handler
+     *  @param {Function} task
      */
-    function PseudoPromise_createHandler(promise, handler)
+    function _Reaction(promise, task)
     {
-        return function (p)
-        {
-            var value = p._result;
+        this._promise = promise;
+        this._task = task;
+    }
 
-            if(isFunction(handler)) {
+    /**
+     *  @template T
+     *  @param {PseudoPromise<T>} thisRef
+     *  @param {_Reaction<T>} reaction
+     */
+    function _queueReaction(thisRef, reaction)
+    {
+        setTimeout(
+            function ()
+            {
+                var reactionFunctions = _createReactionFunctions(reaction._promise);
+
+                var result = void 0;
                 try {
-                    var returnValue = handler(value);
-                    if(isPromiseLike(returnValue)) {
-                        returnValue.then(
+                    result = reaction._task(thisRef._result);
+
+                    if(_isPromiseLike(result)) {
+                        result.then(
                             function (value)
                             {
-                                promise._resolve(value);
+                                reactionFunctions.resolve(value);
                             },
-                            PseudoPromise_createHandler(promise, handler)
+                            function (reason)
+                            {
+                                reactionFunctions.reject(reason);
+                            }
                         );
                     }
                     else {
-                        promise._resolve(returnValue);
+                        reactionFunctions.resolve(result);
                     }
                 }
                 catch(error) {
-                    promise._reject(value);
+                    reactionFunctions.reject(error);
                 }
             }
-            else {
-                promise._reject(value);
-            }
-        };
+        );
+    }
+
+    /**
+     *  @param {*} v
+     *  @returns {v is PromiseLike<any>}
+     */
+    function _isPromiseLike(v)
+    {
+        return "object" === typeof v
+            && null !== v
+            && "then" in v
+            && "function" === typeof v.then
     }
 
     return {
