@@ -9,13 +9,13 @@ module.exports = (function ()
     var _Set = ((Set && "function" === typeof Set) ? Set : ArraySet);
 
     /**
-     *  @typedef {import("./logger").LoggerMessageDecorator} LoggerMessageDecorator
+     *  @typedef {import("./decoratable-logger").LoggerMessageDecorator} LoggerMessageDecorator
      */
 
     /**
      *  @constructor
      */
-    function Logger()
+    function DecoratableLogger()
     {
         /**  @type {Console|null} */this._console = null;
 
@@ -30,8 +30,8 @@ module.exports = (function ()
         /**  @type {Set<LoggerMessageDecorator>} */this._messageDecorators = new _Set();
     }
 
-    Logger.prototype = {
-        constructor : Logger,
+    DecoratableLogger.prototype = {
+        constructor : DecoratableLogger,
 
         getMessageDecorators : function getMessageDecorators()
         {
@@ -59,7 +59,7 @@ module.exports = (function ()
             if(null !== this._console) {
                 this._console.debug.apply(
                     this._console,
-                    Logger_decorateMessages(this, _arraySlice.call(arguments))
+                    DecoratableLogger_decorateMessages(this, _arraySlice.call(arguments))
                 );
             }
         },
@@ -69,7 +69,7 @@ module.exports = (function ()
             if(null !== this._console) {
                 this._console.log.apply(
                     this._console,
-                    Logger_decorateMessages(this, _arraySlice.call(arguments))
+                    DecoratableLogger_decorateMessages(this, _arraySlice.call(arguments))
                 );
             }
         },
@@ -79,7 +79,7 @@ module.exports = (function ()
             if(null !== this._console) {
                 this._console.info.apply(
                     this._console,
-                    Logger_decorateMessages(this, _arraySlice.call(arguments))
+                    DecoratableLogger_decorateMessages(this, _arraySlice.call(arguments))
                 );
             }
         },
@@ -89,7 +89,7 @@ module.exports = (function ()
             if(null !== this._console) {
                 this._console.trace.apply(
                     this._console,
-                    Logger_decorateMessages(this, _arraySlice.call(arguments))
+                    DecoratableLogger_decorateMessages(this, _arraySlice.call(arguments))
                 );
             }
         },
@@ -99,7 +99,7 @@ module.exports = (function ()
             if(null !== this._console) {
                 this._console.warn.apply(
                     this._console,
-                    Logger_decorateMessages(this, _arraySlice.call(arguments))
+                    DecoratableLogger_decorateMessages(this, _arraySlice.call(arguments))
                 );
             }
         },
@@ -109,7 +109,7 @@ module.exports = (function ()
             if(null !== this._console) {
                 this._console.error.apply(
                     this._console,
-                    Logger_decorateMessages(this, _arraySlice.call(arguments))
+                    DecoratableLogger_decorateMessages(this, _arraySlice.call(arguments))
                 );
             }
         }
@@ -119,7 +119,7 @@ module.exports = (function ()
      *  @param {Logger} thisRef
      *  @param {any[]} args
      */
-    function Logger_decorateMessages(thisRef, args)
+    function DecoratableLogger_decorateMessages(thisRef, args)
     {
         var decoratedArgs = args;
         var decorators = thisRef.getMessageDecorators();
@@ -131,6 +131,6 @@ module.exports = (function ()
     }
 
     return {
-        Logger : Logger
+        DecoratableLogger : DecoratableLogger
     };
 })();
