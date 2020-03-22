@@ -7,7 +7,7 @@ var stringUtils = require("./string-utils");
 var objectUtils = require("./object-utils");
 var memoize = require("./memoize").memoize;
 var EventNotifier = require("./event-notifier").EventNotifier;
-var Logger = require("./logger").Logger;
+var Logger = require("./decoratable-logger").DecoratableLogger;
 var TimerScheduler = require("./timer-scheduler").TimerScheduler;
 
 module.exports = Object.assign(
