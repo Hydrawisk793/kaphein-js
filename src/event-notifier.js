@@ -75,9 +75,17 @@ module.exports = (function ()
 
         removeAll : function removeAll(eventName)
         {
-            var handlerMap = EventNotifier_getHandlerMap(this, eventName);
-            if(null !== handlerMap) {
-                handlerMap.clear();
+            var eventNames = (
+                isString(eventName)
+                ? [eventName]
+                : Array.from(this._handlerMaps.keys())
+            );
+
+            for(var i = 0; i < eventNames.length; ++i) {
+                var handlerMap = EventNotifier_getHandlerMap(this, eventNames[i]);
+                if(handlerMap) {
+                    handlerMap.clear();
+                }
             }
 
             return this;
