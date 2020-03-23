@@ -23,8 +23,7 @@ export declare class EventNotifier
     ) : this;
 
     public removeAll(
-        eventName : string,
-        handler : Function
+        eventName : string
     ) : this;
 
     public notify(
