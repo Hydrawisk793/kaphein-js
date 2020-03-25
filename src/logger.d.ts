@@ -1,22 +1,22 @@
 export declare interface Logger
 {
-    public debug(
+    debug(
         ...args : any[]
     ) : void;
 
-    public trace(
+    trace(
         ...args : any[]
     ) : void;
 
-    public info(
+    info(
         ...args : any[]
     ) : void;
 
-    public warn(
+    warn(
         ...args : any[]
     ) : void;
 
-    public error(
+    error(
         ...args : any[]
     ) : void;
 }
