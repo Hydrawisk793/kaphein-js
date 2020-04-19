@@ -10,3 +10,4 @@ export * from "./logger";
 export * from "./decoratable-logger";
 export * from "./timer-scheduler";
 export * from "./ts-utils";
+export * from "./pseudo-generator";

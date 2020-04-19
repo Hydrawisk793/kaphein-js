@@ -9,6 +9,7 @@ var memoize = require("./memoize").memoize;
 var EventNotifier = require("./event-notifier").EventNotifier;
 var DecoratableLogger = require("./decoratable-logger").DecoratableLogger;
 var TimerScheduler = require("./timer-scheduler").TimerScheduler;
+var pseudoGenerator = require("./pseudo-generator");
 
 module.exports = Object.assign(
     {},
@@ -23,5 +24,6 @@ module.exports = Object.assign(
         EventNotifier : EventNotifier,
         DecoratableLogger : DecoratableLogger,
         TimerScheduler : TimerScheduler
-    }
+    },
+    pseudoGenerator
 );

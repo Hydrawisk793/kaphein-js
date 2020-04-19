@@ -1,50 +1,68 @@
-var ListQueue = require("../src").ListQueue;
-var forOf = require("../src").forOf;
+const describe = require("mocha").describe;
+const it = require("mocha").it;
+const expect = require("chai").expect;
 
-var q = new ListQueue([1, 2, 3]);
-console.log("count : ", q.size);
+const ListQueue = require("../src").ListQueue;
 
-while(!q.isEmpty()) {
-    console.log(q.dequeue());
-}
-console.log("count : ", q.size);
-
-q.enqueue(1).enqueue(2).enqueue(3).enqueue(4);
-console.log("count : ", q.size);
-
-console.log(q);
-forOf(
-    q,
-    function (e)
+describe("ListQueue", function ()
+{
+    describe("constructor", function ()
     {
-        console.log(e);
-    }
-);
+        it("default", function ()
+        {
+            expect(() => new ListQueue()).to.not.throw();
+        });
 
+        it("array", function ()
+        {
+            expect(() => new ListQueue([1, 2, 3])).to.not.throw();
+        });
 
-console.log(q.entries());
-forOf(
-    q.entries(),
-    function (e)
+        it("copy constructor", function ()
+        {
+            const arr = [1, 2, 3];
+            const a = new ListQueue(arr);
+            const b = new ListQueue(a);
+
+            expect(Array.from(a)).deep.equal(Array.from(b)).deep.equal(arr);
+        });
+    });
+
+    describe("size", function ()
     {
-        console.log(e);
-    }
-);
+        const arr = [1, 2, 3];
+        const q = new ListQueue(arr);
 
-console.log(q.keys());
-forOf(
-    q.keys(),
-    function (e)
-    {
-        console.log(e);
-    }
-);
+        it("basic", function ()
+        {
+            expect(q.size).to.equal(arr.length);
+            expect(q.isEmpty()).to.equal(false);
+        });
 
-console.log(q.values());
-forOf(
-    q.values(),
-    function (e)
-    {
-        console.log(e);
-    }
-);
+        it("after enqueue a element", function ()
+        {
+            q.enqueue(4);
+
+            expect(q.size).to.equal(arr.length + 1);
+            expect(q.isEmpty()).to.equal(false);
+        });
+    
+        it("after dequeue twice", function ()
+        {
+            q.dequeue();
+            q.dequeue();
+
+            expect(q.size).to.equal(arr.length - 1);
+            expect(q.isEmpty()).to.equal(false);
+        });
+
+        it("after empty the queue", function ()
+        {
+            q.dequeue();
+            q.dequeue();
+
+            expect(q.size).to.equal(0);
+            expect(q.isEmpty()).to.equal(true);
+        });
+    });
+});
