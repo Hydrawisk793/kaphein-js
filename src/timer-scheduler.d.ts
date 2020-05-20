@@ -1,4 +1,4 @@
-import { EventNotifierAddOption } from "kaphein-js";
+import { EventNotifierAddOption } from "./event-notifier";
 
 export declare interface TimerEventMap
 {

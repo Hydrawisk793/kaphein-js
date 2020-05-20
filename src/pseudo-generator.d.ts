@@ -27,7 +27,13 @@ export declare type PseudoAsyncGeneratorExecutor<
     T = unknown,
     TReturn = any,
     TNext = unknown
-> = <State, Args, T, TReturn, TNext>(
+> = <
+    State = Record<number | string | symbol, any>,
+    Args extends any[] = any[],
+    T = unknown,
+    TReturn = any,
+    TNext = unknown
+>(
     context : PseudoGeneratorContext<State, Args, T, TReturn, TNext>
 ) => T | TReturn | Promise<T> | Promise<TReturn>;
 
