@@ -40,17 +40,25 @@ module.exports = (function ()
             }
         );
 
-        Object
-            .keys(parentCtor)
-            .forEach(
-                function (key)
-                {
-                    if(_hasOwnProperty.call(parentCtor, key)) {
-                        ctor[key] = parentCtor[key];
+        if(Object.setPrototypeOf) {
+            Object.setPrototypeOf(ctor, parentCtor);
+        }
+        else if(ctor.__proto__) {
+            ctor.__proto__ = parentCtor;
+        }
+        else {
+            Object
+                .keys(parentCtor)
+                .forEach(
+                    function (key)
+                    {
+                        if(_hasOwnProperty.call(parentCtor, key)) {
+                            ctor[key] = parentCtor[key];
+                        }
                     }
-                }
-            )
-        ;
+                )
+            ;
+        }
 
         return ctor;
     }

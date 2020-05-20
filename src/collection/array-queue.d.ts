@@ -6,7 +6,7 @@ export declare class ArrayQueue<T> implements Iterable<T>
 
     public readonly size : number;
 
-    public [Symbol.iterator]() : IteratorResult<T>;
+    public [Symbol.iterator]() : Iterator<T>;
 
     public entries() : IterableIterator<[number, T]>;
 
