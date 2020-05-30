@@ -43,7 +43,20 @@ module.exports = (function ()
                 throw new TypeError("'handler' must be a function.");
             }
 
-            var option = arguments[2] ? arguments[2] : {};
+            var option = ("undefined" === typeof arguments[2] ? false : arguments[2]);
+
+            var once = false;
+            switch(typeof option)
+            {
+            case "boolean":
+                once = option;
+            break;
+            case "object":
+                once = (null !== option && "once" in option && !!option.once);
+            break;
+            default:
+                once = false;
+            }
 
             var handlerMap = EventNotifier_getHandlerMap(this, eventName, true);
             if(!handlerMap.has(handler)) {
@@ -51,7 +64,7 @@ module.exports = (function ()
                     handler,
                     {
                         handler : handler,
-                        once : option.once
+                        once : once
                     }
                 );
             }
