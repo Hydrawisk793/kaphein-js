@@ -18,10 +18,10 @@ export declare class StringKeyMap<V> implements Map<string, V>
     );
 
     public attach(
-        obj : { [key : string] : V }
+        obj : Record<string, V>
     ) : void;
 
-    public detach() : { [key : string] : V };
+    public detach() : Record<string, V>;
 
     public [Symbol.toStringTag] : string;
 
@@ -82,5 +82,5 @@ export declare class StringKeyMap<V> implements Map<string, V>
         value : V
     ) : this;
 
-    public toPlainObject() : { [key : string] : V };
+    public toPlainObject() : Record<string, V>;
 }

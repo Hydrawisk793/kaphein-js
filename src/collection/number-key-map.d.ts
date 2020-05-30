@@ -18,10 +18,10 @@ export declare class NumberKeyMap<V> implements Map<number, V>
     );
 
     public attach(
-        obj : { [key : number] : V }
+        obj : Record<number, V>
     ) : void;
 
-    public detach() : { [key : number] : V };
+    public detach() : Record<number, V>;
 
     public [Symbol.toStringTag] : string;
 
@@ -82,5 +82,5 @@ export declare class NumberKeyMap<V> implements Map<number, V>
         value : V
     ) : this;
 
-    public toPlainObject() : { [key : number] : V };
+    public toPlainObject() : Record<number, V>;
 }
