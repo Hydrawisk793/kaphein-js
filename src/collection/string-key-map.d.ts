@@ -41,24 +41,22 @@ export declare class StringKeyMap<V> implements Map<string, V>
         key : string
     ) : boolean;
 
-    public forEach<ThisArg = any>(
+    public forEach(
         callbackFn : (
-            this : ThisArg,
             value : V,
             key : string,
             map : StringKeyMap<V>
         ) => void,
-        thisArg? : ThisArg
+        thisArg? : any
     ) : void;
 
-    public map<R, ThisArg = any>(
+    public map<R>(
         callbackFn : (
-            this : ThisArg,
             value : V,
             key : string,
             map : StringKeyMap<V>
         ) => R,
-        thisArg? : ThisArg
+        thisArg? : any
     ) : R[];
 
     public [Symbol.iterator]() : IterableIterator<[string, V]>;
