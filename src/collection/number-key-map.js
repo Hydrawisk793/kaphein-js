@@ -157,7 +157,15 @@ module.exports = (function ()
             return new ValueIterator(this._map);
         },
 
+        /**
+         *  @deprecated
+         */
         toPlainObject : function toPlainObject()
+        {
+            return this.toRecord();
+        },
+
+        toRecord : function toRecord()
         {
             var i, key;
             var iter = this.keys();

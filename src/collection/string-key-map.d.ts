@@ -80,5 +80,10 @@ export declare class StringKeyMap<V> implements Map<string, V>
         value : V
     ) : this;
 
+    /**
+     *  @deprecated Use toRecord method instead.
+     */
     public toPlainObject() : Record<string, V>;
+
+    public toRecord() : Record<string, V>;
 }

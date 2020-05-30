@@ -157,14 +157,22 @@ module.exports = (function ()
             return new ValueIterator(this._map);
         },
 
+        /**
+         *  @deprecated
+         */
         toPlainObject : function toPlainObject()
+        {
+            return this.toRecord();
+        },
+
+        toRecord : function toRecord()
         {
             var i, key;
             var iter = this.keys();
             var plainObject = {};
 
             for(i = iter.next(); !i.done; i = iter.next()) {
-                key = i.value
+                key = String(i.value);
 
                 plainObject[key] = this._map[key];
             }

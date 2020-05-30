@@ -80,5 +80,10 @@ export declare class NumberKeyMap<V> implements Map<number, V>
         value : V
     ) : this;
 
+    /**
+     *  @deprecated Use toRecord method instead.
+     */
     public toPlainObject() : Record<number, V>;
+
+    public toRecord() : Record<number, V>;
 }
