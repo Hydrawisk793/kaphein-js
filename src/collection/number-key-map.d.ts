@@ -18,10 +18,10 @@ export declare class NumberKeyMap<V> implements Map<number, V>
     );
 
     public attach(
-        obj : { [key : number] : V }
+        obj : Record<number, V>
     ) : void;
 
-    public detach() : { [key : number] : V };
+    public detach() : Record<number, V>;
 
     public [Symbol.toStringTag] : string;
 
@@ -41,24 +41,22 @@ export declare class NumberKeyMap<V> implements Map<number, V>
         key : number
     ) : boolean;
 
-    public forEach<ThisArg = any>(
+    public forEach(
         callbackFn : (
-            this : ThisArg,
             value : V,
             key : number,
             map : NumberKeyMap<V>
         ) => void,
-        thisArg? : ThisArg
+        thisArg? : any
     ) : void;
 
-    public map<R, ThisArg = any>(
+    public map<R>(
         callbackFn : (
-            this : ThisArg,
             value : V,
             key : number,
             map : NumberKeyMap<V>
         ) => R,
-        thisArg? : ThisArg
+        thisArg? : any
     ) : R[];
 
     public [Symbol.iterator]() : IterableIterator<[number, V]>;
@@ -82,5 +80,10 @@ export declare class NumberKeyMap<V> implements Map<number, V>
         value : V
     ) : this;
 
-    public toPlainObject() : { [key : number] : V };
+    /**
+     *  @deprecated Use toRecord method instead.
+     */
+    public toPlainObject() : Record<number, V>;
+
+    public toRecord() : Record<number, V>;
 }

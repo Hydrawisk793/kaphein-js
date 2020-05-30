@@ -14,7 +14,7 @@ export declare class EventNotifier
     public add(
         eventName : string,
         handler : Function,
-        option? : EventNotifierAddOption
+        option? : boolean | EventNotifierAddOption
     ) : this;
 
     public remove(

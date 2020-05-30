@@ -18,10 +18,10 @@ export declare class StringKeyMap<V> implements Map<string, V>
     );
 
     public attach(
-        obj : { [key : string] : V }
+        obj : Record<string, V>
     ) : void;
 
-    public detach() : { [key : string] : V };
+    public detach() : Record<string, V>;
 
     public [Symbol.toStringTag] : string;
 
@@ -41,24 +41,22 @@ export declare class StringKeyMap<V> implements Map<string, V>
         key : string
     ) : boolean;
 
-    public forEach<ThisArg = any>(
+    public forEach(
         callbackFn : (
-            this : ThisArg,
             value : V,
             key : string,
             map : StringKeyMap<V>
         ) => void,
-        thisArg? : ThisArg
+        thisArg? : any
     ) : void;
 
-    public map<R, ThisArg = any>(
+    public map<R>(
         callbackFn : (
-            this : ThisArg,
             value : V,
             key : string,
             map : StringKeyMap<V>
         ) => R,
-        thisArg? : ThisArg
+        thisArg? : any
     ) : R[];
 
     public [Symbol.iterator]() : IterableIterator<[string, V]>;
@@ -82,5 +80,10 @@ export declare class StringKeyMap<V> implements Map<string, V>
         value : V
     ) : this;
 
-    public toPlainObject() : { [key : string] : V };
+    /**
+     *  @deprecated Use toRecord method instead.
+     */
+    public toPlainObject() : Record<string, V>;
+
+    public toRecord() : Record<string, V>;
 }
