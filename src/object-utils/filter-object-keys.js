@@ -6,7 +6,7 @@ module.exports = (function ()
 {
     /**
      *  @param {*} obj
-     *  @param {string[] | ((key : string) => boolean)} predicate
+     *  @param {string[] | ((key : string) => boolean) | ((value : any, key : string) => boolean)} predicate
      *  @returns {Record<string, any>}
      */
     function filterObjectKeys(obj, predicate)
@@ -31,7 +31,18 @@ module.exports = (function ()
                 for(keys = Object.keys(obj), i = 0; i < keys.length; ++i) {
                     key = keys[i];
 
-                    if(predicate(key)) {
+                    var predicateResult = false;
+                    if(1 === predicate.length)
+                    {
+                        predicateResult = predicate(key);
+                    }
+                    else
+                    {
+                        predicateResult = predicate(obj[key], key);
+                    }
+
+                    if(predicateResult)
+                    {
                         result[key] = obj[key];
                     }
                 }
