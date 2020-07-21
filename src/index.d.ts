@@ -1,3 +1,4 @@
+export * from "./polyfill";
 export * from "./type-trait";
 export * from "./collection";
 export * from "./number-utils";
