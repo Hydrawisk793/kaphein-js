@@ -1,15 +1,17 @@
 declare interface PromiseConstructor
 {
+    fuckingShit() : void;
+
     allSettled(
         iterable : Iterable<PromiseLike<any>>
     ) : Promise<
         [
             {
-                status : string;
+                status : "fulfilled";
                 value : any;
             }
             | {
-                status : string;
+                status : "rejected";
                 reason : any;
             }
         ]

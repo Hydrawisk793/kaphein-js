@@ -1,3 +1,4 @@
+export * from "./polyfill";
 export * from "./type-trait";
 export * from "./collection";
 export * from "./number-utils";
@@ -7,6 +8,7 @@ export * from "./object-utils";
 export * from "./memoize";
 export * from "./event-notifier";
 export * from "./logger";
+export * from "./null-logger";
 export * from "./decoratable-logger";
 export * from "./timer-scheduler";
 export * from "./ts-utils";
