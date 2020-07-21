@@ -7,6 +7,7 @@ export * from "./object-utils";
 export * from "./memoize";
 export * from "./event-notifier";
 export * from "./logger";
+export * from "./null-logger";
 export * from "./decoratable-logger";
 export * from "./timer-scheduler";
 export * from "./ts-utils";
