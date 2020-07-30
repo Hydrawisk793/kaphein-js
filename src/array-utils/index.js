@@ -1,6 +1,4 @@
-var isUndefinedOrNull = require("../type-trait").isUndefinedOrNull;
 var isArray = require("../type-trait").isArray;
-var isIterable = require("../type-trait").isIterable;
 var isCallable = require("../type-trait").isCallable;
 
 module.exports = (function ()
@@ -62,32 +60,13 @@ module.exports = (function ()
     }
 
     /**
-     *  @param {*} v
-     *  @returns {*[]}
+     *  @template T
+     *  @param {T | T[]} v
+     *  @returns {T[]}
      */
     function coerceToArray(v)
     {
-        var result;
-
-        if(isUndefinedOrNull(v)) {
-            result = [];
-        }
-        else if(isArray(v)) {
-            result = v.slice();
-        }
-        else if(isIterable(v)) {
-            result = Array.from(v);
-        }
-        else {
-            result = Object.keys(v).map(
-                function (key)
-                {
-                    return [key, v[key]];
-                }
-            );
-        }
-
-        return result;
+        return (isArray(v) ? v : [v]);
     }
 
     /**

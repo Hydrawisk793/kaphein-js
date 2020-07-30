@@ -7,9 +7,9 @@ export declare function findArrayChanges<T>(
     addedItems : T[];
 };
 
-export declare function coerceToArray(
-    v : any
-) : any[];
+export declare function coerceToArray<T>(
+    v : T | T[]
+) : T[];
 
 export declare function flatten(
     arr : any[]
