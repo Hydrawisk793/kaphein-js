@@ -5,7 +5,7 @@ var ArrayMap = require("./collection").ArrayMap;
 
 module.exports = (function ()
 {
-    var _Map = ((Map && "function" === typeof Map) ? Map : ArrayMap);
+    var _Map = ("function" === typeof Map ? Map : ArrayMap);
 
     /**
      *  @typedef {{
@@ -113,8 +113,7 @@ module.exports = (function ()
             /** @type {any[]} */var results = [];
 
             var handlerMap = EventNotifier_getHandlerMap(this, eventName);
-            if(null !== handlerMap && handlerMap.size > 0) {
-                var handlersToBeRemoved = [];
+            if(handlerMap && handlerMap.size > 0) {
                 var i = 0;
 
                 var descriptors = Array.from(handlerMap.values());
@@ -123,14 +122,10 @@ module.exports = (function ()
                     var handler = descriptor.handler;
 
                     if(descriptor.once) {
-                        handlersToBeRemoved.push(handler);
+                        handlerMap["delete"](handler);
                     }
 
                     results.push(handler(eventArgs));
-                }
-
-                for(i = 0; i < handlersToBeRemoved.length; ++i) {
-                    handlerMap["delete"](handlersToBeRemoved[i]);
                 }
             }
 
@@ -153,8 +148,7 @@ module.exports = (function ()
         dispatch : function dispatch(eventName, eventArgs)
         {
             var handlerMap = EventNotifier_getHandlerMap(this, eventName);
-            if(null !== handlerMap && handlerMap.size > 0) {
-                var handlersToBeRemoved = [];
+            if(handlerMap && handlerMap.size > 0) {
                 var i = 0;
 
                 var handlers = [];
@@ -164,17 +158,13 @@ module.exports = (function ()
                     var handler = descriptor.handler;
 
                     if(descriptor.once) {
-                        handlersToBeRemoved.push(handler);
+                        handlerMap["delete"](handler);
                     }
 
                     handlers.push(handler);
                 }
 
                 EventNotifier_dispatchHandlerAndArgs(this, handlers, eventName, eventArgs, arguments[2]);
-
-                for(i = 0; i < handlersToBeRemoved.length; ++i) {
-                    handlerMap["delete"](handlersToBeRemoved[i]);
-                }
             }
 
             return this;
