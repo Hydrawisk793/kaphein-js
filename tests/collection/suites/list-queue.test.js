@@ -1,10 +1,8 @@
-const describe = require("mocha").describe;
-const it = require("mocha").it;
-const expect = require("chai").expect;
+const { expect } = require("chai");
 
-const ListQueue = require("../src").ListQueue;
+const { ListQueue } = require("../../../src");
 
-describe("ListQueue", function ()
+module.exports = function ()
 {
     describe("constructor", function ()
     {
@@ -46,7 +44,7 @@ describe("ListQueue", function ()
             expect(q.size).to.equal(arr.length + 1);
             expect(q.isEmpty()).to.equal(false);
         });
-    
+
         it("after dequeue twice", function ()
         {
             q.dequeue();
@@ -65,4 +63,4 @@ describe("ListQueue", function ()
             expect(q.isEmpty()).to.equal(true);
         });
     });
-});
+};
