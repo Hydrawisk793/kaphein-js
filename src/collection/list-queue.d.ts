@@ -1,4 +1,6 @@
-export declare class ListQueue<T>
+import { IterableQueue } from "./queue";
+
+export declare class ListQueue<T> implements IterableQueue<T>
 {
     public constructor(
         iterable? : Iterable<T>
@@ -9,6 +11,16 @@ export declare class ListQueue<T>
     public isEmpty() : boolean;
 
     public isFull() : boolean;
+
+    public peek() : T | undefined;
+
+    public enqueue(
+        element : T
+    ) : void;
+
+    public dequeue() : T | undefined;
+
+    public clear() : void;
 
     public forEach(
         callback : (
@@ -27,15 +39,10 @@ export declare class ListQueue<T>
 
     public values() : IterableIterator<T>;
 
-    public peek() : T | undefined;
-
-    public enqueue(
-        element : T
-    ) : this;
-
-    public dequeue() : T | undefined;
-
-    public clear() : void;
-
     public [Symbol.toStringTag] : string;
+
+    /**
+     *  @override
+     */
+    public toString() : string;
 }
