@@ -27,7 +27,7 @@ export declare namespace RbTreeSet
 export declare class RbTreeSet<T> implements Set<T>
 {
     public constructor(
-        iterable? : Iterable<T>,
+        iterable? : Iterable<T> | null,
         comparer? : Comparer<T>
     );
 
