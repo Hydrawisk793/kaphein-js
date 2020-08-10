@@ -4,7 +4,7 @@ import { RbTreeSearchTarget } from "./rb-tree-search-target";
 export declare class RbTreeMap<K, V> implements Map<K, V>
 {
     public constructor(
-        iterable? : Iterable<[K, V]>,
+        iterable? : Iterable<[K, V]> | null,
         keyComparer? : Comparer<K>
     );
 

@@ -41,7 +41,7 @@ module.exports = (function ()
                 return comparer(lhs[0], rhs[0]);
             }
         );
-        this.size = 0;
+        this.size = this._rbTreeSet.size;
     }
 
     RbTreeMap.prototype = {
@@ -143,7 +143,7 @@ module.exports = (function ()
          */
         findEntry : function findEntry(key, searchTarget)
         {
-            var entry = this._rbTreeSet.findValue(key, searchTarget);
+            var entry = this._rbTreeSet.findValue([key, null], searchTarget);
 
             return (entry ? entry.slice() : entry);
         },
@@ -207,7 +207,7 @@ module.exports = (function ()
                 lastElemIter.moveToPrevious();
 
                 if(!lastElemIter.equals(endIter)) {
-                    return _entryToResultObj(lastElemIter.dereference());
+                    return lastElemIter.dereference().slice();
                 }
             }
         },
@@ -350,6 +350,13 @@ module.exports = (function ()
         }
     };
 
+    if(isSymbolSupported()) {
+        PairIterator.prototype[Symbol.iterator] = function ()
+        {
+            return this;
+        };
+    }
+
     /**
      *  @template K, V
      *  @constructor
@@ -380,6 +387,13 @@ module.exports = (function ()
             return out;
         }
     };
+
+    if(isSymbolSupported()) {
+        KeyIterator.prototype[Symbol.iterator] = function ()
+        {
+            return this;
+        };
+    }
 
     /**
      *  @template K, V
@@ -413,6 +427,13 @@ module.exports = (function ()
             return out;
         }
     };
+
+    if(isSymbolSupported()) {
+        ValueIterator.prototype[Symbol.iterator] = function ()
+        {
+            return this;
+        };
+    }
 
     /**
      *  @template K, V

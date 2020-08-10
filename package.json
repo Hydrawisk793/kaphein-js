@@ -1,6 +1,6 @@
 {
     "name": "kaphein-js",
-    "version": "0.11.0",
+    "version": "0.12.0",
     "description": "A toolkit for developing various softwares in JavaScript.",
     "main": "dist/index.js",
     "module": "dist/index.js",
@@ -11,7 +11,7 @@
     "scripts": {
         "lint": "tsc --project tsconfig.dts.json && eslint src/**/*.js",
         "lint:fix": "npm run lint -- --fix",
-        "test": "mocha",
+        "test": "mocha tests/**",
         "build": "rm -rf dist && npm run lint && webpack --mode production --config webpack.config.js",
         "prepack": "npm install && npm run build"
     },

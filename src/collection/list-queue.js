@@ -15,7 +15,7 @@ module.exports = (function ()
         /**  @type {ListNode<T>} */this._tail = null;
         this.size = 0;
 
-        var iterable = arguments[0];
+        /** @type {Iterable<T>} */var iterable = arguments[0];
         if(isIterable(iterable)) {
             forOf(
                 iterable,
@@ -44,6 +44,61 @@ module.exports = (function ()
         isFull : function isFull()
         {
             return this.size >= Number.MAX_SAFE_INTEGER;
+        },
+
+        peek : function peek()
+        {
+            return (this.isEmpty() ? void 0 : this._head.element);
+        },
+
+        /**
+         *  @param {T} e
+         */
+        enqueue : function enqueue(e)
+        {
+            if(this.isFull()) {
+                throw new Error("The queue is full.");
+            }
+
+            var newNode = new ListNode(e, null);
+            if(!this.isEmpty()) {
+                this._tail.next = newNode;
+            }
+            else {
+                this._head = newNode;
+            }
+            this._tail = newNode;
+
+            ++this.size;
+        },
+
+        dequeue : function dequeue()
+        {
+            var element = void 0;
+            if(!this.isEmpty()) {
+                if(this._head !== this._tail) {
+                    element = this._head.element;
+
+                    this._head = this._head.next;
+                }
+                else {
+                    element = this._tail.element;
+
+                    this._head = null;
+                    this._tail = null;
+                }
+
+                --this.size;
+            }
+
+            return element;
+        },
+
+        clear : function clear()
+        {
+            this._head = null;
+            this._tail = null;
+            this._elemCount = 0;
         },
 
         forEach : function forEach(callback)
@@ -77,63 +132,6 @@ module.exports = (function ()
         values : function values()
         {
             return new ValueIterator(this._head);
-        },
-
-        peek : function peek()
-        {
-            return (this.isEmpty() ? void 0 : this._head.element);
-        },
-
-        /**
-         *  @param {T} e
-         */
-        enqueue : function enqueue(e)
-        {
-            if(this.isFull()) {
-                throw new Error("The queue is full.");
-            }
-
-            var newNode = new ListNode(e, null);
-            if(!this.isEmpty()) {
-                this._tail.next = newNode;
-            }
-            else {
-                this._head = newNode;
-            }
-            this._tail = newNode;
-
-            ++this.size;
-
-            return this;
-        },
-
-        dequeue : function dequeue()
-        {
-            var element = void 0;
-            if(!this.isEmpty()) {
-                if(this._head !== this._tail) {
-                    element = this._head.element;
-    
-                    this._head = this._head.next;
-                }
-                else {
-                    element = this._tail.element;
-
-                    this._head = null;
-                    this._tail = null;
-                }
-
-                --this.size;
-            }
-
-            return element;
-        },
-
-        clear : function clear()
-        {
-            this._head = null;
-            this._tail = null;
-            this._elemCount = 0;
         },
 
         toString : function toString()
