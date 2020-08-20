@@ -61,7 +61,7 @@ describe("PseudoAsyncGenerator", function ()
     {
         it("should handle normal yields", async function ()
         {
-            this.enableTimeouts(false);
+            this.timeout(0);
 
             async function* gen()
             {
@@ -116,7 +116,7 @@ describe("PseudoAsyncGenerator", function ()
 
         it("should handle promise yields", async function ()
         {
-            this.enableTimeouts(false);
+            this.timeout(0);
 
             async function* gen()
             {
@@ -182,7 +182,7 @@ describe("PseudoAsyncGenerator", function ()
     {
         it("should delegate generators.", async function ()
         {
-            this.enableTimeouts(false);
+            this.timeout(0);
 
             async function* asyncTask01()
             {
@@ -249,7 +249,7 @@ describe("PseudoAsyncGenerator", function ()
 
         it("should handle the promise-type value of IteratorResult returned from the delegated generator.", async function ()
         {
-            this.enableTimeouts(false);
+            this.timeout(0);
 
             function* syncTask()
             {
@@ -358,7 +358,7 @@ describe("PseudoAsyncGenerator", function ()
 
         it("should pass the final return value of the delegated generator to context.lastYieldedValue.", async function ()
         {
-            this.enableTimeouts(false);
+            this.timeout(0);
 
             function* createSubSubTask()
             {

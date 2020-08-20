@@ -18,6 +18,7 @@ var RbTreeMap = require("./rb-tree-map").RbTreeMap;
 var ArrayQueue = require("./array-queue").ArrayQueue;
 var ListQueue = require("./list-queue").ListQueue;
 var PriorityQueue = require("./priority-queue").PriorityQueue;
+var StringKeyTrie = require("./string-key-trie").StringKeyTrie;
 
 module.exports = {
     forOf : forOf,
@@ -39,5 +40,6 @@ module.exports = {
     RbTreeMap : RbTreeMap,
     ArrayQueue : ArrayQueue,
     ListQueue : ListQueue,
-    PriorityQueue : PriorityQueue
+    PriorityQueue : PriorityQueue,
+    StringKeyTrie : StringKeyTrie
 };

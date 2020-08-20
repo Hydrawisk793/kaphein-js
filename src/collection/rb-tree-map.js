@@ -133,7 +133,7 @@ module.exports = (function ()
             return !this._rbTreeSet.find(
                 [key, null],
                 RbTreeSet.SearchTarget.equal
-            ).euqls(this._rbTreeSet.end());
+            ).equals(this._rbTreeSet.end());
         },
 
         /**
@@ -311,10 +311,7 @@ module.exports = (function ()
             return new PairIterator(this);
         };
 
-        RbTreeMap.prototype[Symbol.toStringTag] = function ()
-        {
-            return "RbTreeMap";
-        };
+        RbTreeMap.prototype[Symbol.toStringTag] = "RbTreeMap";
     }
 
     /**
