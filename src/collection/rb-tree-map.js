@@ -311,10 +311,7 @@ module.exports = (function ()
             return new PairIterator(this);
         };
 
-        RbTreeMap.prototype[Symbol.toStringTag] = function ()
-        {
-            return "RbTreeMap";
-        };
+        RbTreeMap.prototype[Symbol.toStringTag] = "RbTreeMap";
     }
 
     /**
