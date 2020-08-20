@@ -133,7 +133,7 @@ module.exports = (function ()
             return !this._rbTreeSet.find(
                 [key, null],
                 RbTreeSet.SearchTarget.equal
-            ).euqls(this._rbTreeSet.end());
+            ).equals(this._rbTreeSet.end());
         },
 
         /**
