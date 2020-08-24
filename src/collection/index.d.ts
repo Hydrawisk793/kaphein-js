@@ -17,4 +17,5 @@ export * from "./queue";
 export * from "./array-queue";
 export * from "./list-queue";
 export * from "./priority-queue";
+export * from "./trie";
 export * from "./string-key-trie";
