@@ -80,6 +80,6 @@ export declare class ArrayMap<K, V> implements Map<K, V>
     public clear() : void;
 
     public toArray() : [K, V][];
-    
+
     public [Symbol.toStringTag] : string;
 }
