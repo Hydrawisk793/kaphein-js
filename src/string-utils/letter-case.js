@@ -34,12 +34,14 @@ module.exports = (function ()
             if(e < text.length)
             {
                 var c = text[e];
-                if(
-                    c === c.toUpperCase()
-                    && (e < 1 || (isAlphabetic.test(text[e - 1])))
-                )
+
+                if(isAlphabetic.test(c))
                 {
-                    shouldExtractToken = true;
+                    shouldExtractToken = c === c.toUpperCase();
+                }
+                else
+                {
+                    shouldExtractToken = (e > 0 && isAlphabetic.test(text[e - 1]));
                 }
 
                 shouldIncrementE = true;
