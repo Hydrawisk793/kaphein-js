@@ -2,6 +2,9 @@ var isUndefinedOrNull = require("../type-trait").isUndefinedOrNull;
 
 module.exports = (function ()
 {
+    var isAlphabetic = /[^.,/#!$%^&*;:{}=\-_`~()0-9]/;
+    var isPunctuation = /[.,/#!$%^&*;:{}=\-_`~()]/;
+
     /**
      *  @param {string} text
      *  @param {string} [delimiter]
@@ -31,7 +34,10 @@ module.exports = (function ()
             if(e < text.length)
             {
                 var c = text[e];
-                if(c === c.toUpperCase())
+                if(
+                    c === c.toUpperCase()
+                    && (e < 1 || (isAlphabetic.test(text[e - 1])))
+                )
                 {
                     shouldExtractToken = true;
                 }
@@ -75,7 +81,7 @@ module.exports = (function ()
         var delimiter = arguments[1];
         if(isUndefinedOrNull(delimiter))
         {
-            delimiter = /[.,/#!$%^&*;:{}=\-_`~()]/;
+            delimiter = isPunctuation;
         }
 
         var option = arguments[2];
