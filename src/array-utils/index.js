@@ -3,6 +3,11 @@ var isCallable = require("../type-trait").isCallable;
 
 module.exports = (function ()
 {
+    /**
+     *  @template E
+     *  @typedef {import("./index").FlattenArray<E>} FlattenArray
+     */
+
     function _has(arr, itemComparer, item)
     {
         return arr.findIndex(
@@ -70,7 +75,9 @@ module.exports = (function ()
     }
 
     /**
-     *  @param {Array<any>} arr
+     *  @template E
+     *  @param {E} arr
+     *  @returns {FlattenArray<E>[]}
      */
     function flatten(arr)
     {
