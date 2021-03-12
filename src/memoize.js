@@ -8,35 +8,42 @@ module.exports = (function ()
 
     function memoize(func, option)
     {
-        option = (!isUndefinedOrNull(option) ? option : {});
-        var reuseResultReferenceIfPossible = (!("reuseResultReferenceIfPossible" in option) ? true : (!!option.reuseResultReferenceIfPossible));
-        var equalComparer = (isCallable(option.equalComparer) ? option.equalComparer : deepEquals);
-        var scope = {
-            func : func,
-            equalComparer : equalComparer,
-            argsEqualComparer : (isCallable(option.argsEqualComparer) ? option.argsEqualComparer : equalComparer),
-            resultEqualComparer : (isCallable(option.resultEqualComparer) ? option.resultEqualComparer : equalComparer),
-            /**  @type {any[]} */lastArgs : null,
-            lastResult : void 0,
-            thisArg : option.thisArg
+        var ctx = {
+            called : false,
+            f : func,
+            opt : option
         };
 
         return function ()
         {
-            var newResult;
-            /**  @type {any[]} */var args = _slice.call(arguments);
+            if(!ctx.called)
+            {
+                ctx.opt = (!isUndefinedOrNull(ctx.opt) ? ctx.opt : {});
+                var opt = ctx.opt;
+                var equalComparer = (isCallable(opt.equalComparer) ? opt.equalComparer : deepEquals);
 
-            if(!!option.alwaysEvaluate || !scope.argsEqualComparer(scope.lastArgs, args)) {
-                newResult = scope.func.apply(scope.thisArg, args);
-
-                if(!reuseResultReferenceIfPossible || !scope.resultEqualComparer(scope.lastResult, newResult)) {
-                    scope.lastResult = newResult;
-                }
-
-                scope.lastArgs = args;
+                ctx.equalComparer = equalComparer;
+                ctx.reuseResultReference = (!("reuseResultReferenceIfPossible" in opt) ? true : (!!opt.reuseResultReferenceIfPossible));
+                ctx.argsEqualComparer = (isCallable(opt.argsEqualComparer) ? opt.argsEqualComparer : equalComparer);
+                ctx.resultEqualComparer = (isCallable(opt.resultEqualComparer) ? opt.resultEqualComparer : equalComparer);
+                ctx.lastArgs = null;
+                ctx.lastResult = void 0;
+                ctx.called = true;
             }
 
-            return scope.lastResult;
+            /**  @type {any[]} */var args = _slice.call(arguments);
+            var newResult = void 0;
+            if(!!ctx.opt.alwaysEvaluate || !ctx.argsEqualComparer(ctx.lastArgs, args)) {
+                newResult = ctx.f.apply(ctx.thisArg, args);
+
+                if(!ctx.reuseResultReference || !ctx.resultEqualComparer(ctx.lastResult, newResult)) {
+                    ctx.lastResult = newResult;
+                }
+
+                ctx.lastArgs = args;
+            }
+
+            return ctx.lastResult;
         };
     }
 
